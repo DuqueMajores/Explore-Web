@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel SQLite & Gestão — Portal Notícias SQLite{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- Cabeçalho do Painel -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center">
+                <i class="fa-solid fa-database text-brand-600 mr-2.5"></i>
+                Painel do Banco SQLite & Regra dos 5 Dias
+            </h1>
+            <p class="text-xs text-slate-500 mt-1">
+                Monitoramento do banco local baseado em arquivo, expiração automática e recriação dinâmica.
+            </p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <!-- Botão de Limpeza Manual -->
+            <form action="{{ url_for('admin.trigger_cleanup') }}" method="POST" class="inline">
+                <button type="submit" class="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold bg-rose-600 text-white hover:bg-rose-700 shadow-sm transition">
+                    <i class="fa-solid fa-broom mr-1.5"></i> Executar Limpeza dos 5 Dias
+                </button>
+            </form>
+            <a href="{{ url_for('admin.backups') }}" class="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold bg-slate-800 text-white hover:bg-slate-900 shadow-sm transition">
+                <i class="fa-solid fa-box-archive mr-1.5"></i> Backups Locais
+            </a>
+        </div>
+    </div>
+
+    <!-- Cards de Status do SQLite -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Arquivo SQLite -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-2">
+                    <span>Arquivo do Banco</span>
+                    <i class="fa-solid fa-file-code text-brand-600"></i>
+                </div>
+                <div class="font-mono text-xs font-bold text-slate-800 truncate" title="{{ db_path }}">
+                    {{ db_path.split('/')[-2:]|join('/') if '/' in db_path else db_path }}
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">
+                    Tamanho: <strong class="text-slate-800">{{ db_size_kb }} KB</strong>
+                </p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                <span class="text-emerald-700 font-medium flex items-center">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> SQLite Ativo
+                </span>
+                <span class="text-slate-400">Zero Nuvem</span>
+            </div>
+        </div>
+
+        <!-- Notícias Salvas -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-2">
+                    <span>Notícias Salvas</span>
+                    <i class="fa-solid fa-newspaper text-sky-600"></i>
+                </div>
+                <div class="text-2xl font-extrabold text-slate-900">
+                    {{ total_articles }}
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">
+                    Matérias persistidas no SQLite
+                </p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-400">
+                Tabela <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-600">news_articles</code>
+            </div>
+        </div>
+
+        <!-- Páginas Internas Ativas -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-2">
+                    <span>Páginas Criadas</span>
+                    <i class="fa-solid fa-file-lines text-amber-600"></i>
+                </div>
+                <div class="text-2xl font-extrabold text-brand-700">
+                    {{ total_pages }}
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">
+                    Registros em <code class="text-slate-700 font-mono">article_pages</code>
+                </p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-amber-700 font-medium">
+                Expiração: {{ expiration_days }} dias sem acesso
+            </div>
+        </div>
+
+        <!-- Registros de Acesso Anônimo -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between text-slate-400 text-xs font-semibold uppercase mb-2">
+                    <span>Logs de Leitura</span>
+                    <i class="fa-solid fa-user-clock text-emerald-600"></i>
+                </div>
+                <div class="text-2xl font-extrabold text-slate-900">
+                    {{ total_logs }}
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">
+                    Acessos anônimos auditados
+                </p>
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-slate-400">
+                Tabela <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-600">access_logs</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explicação Estrutural Arquitetural -->
+    <div class="bg-slate-900 rounded-2xl p-6 text-slate-200 shadow-md">
+        <h2 class="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center">
+            <i class="fa-solid fa-circle-nodes text-sky-400 mr-2"></i>
+            Entendendo a Arquitetura: Servidor vs. Navegador vs. GitHub Pages
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+            <div class="space-y-2">
+                <h3 class="font-bold text-sky-300 flex items-center">
+                    <i class="fa-solid fa-house-laptop mr-1.5"></i> Como João e Maria veem a mesma página?
+                </h3>
+                <p class="text-slate-300">
+                    O arquivo <strong>SQLite permanece exclusivamente no servidor Flask</strong>. Quando João (em São Paulo) acessa um card, o servidor cria o registro no SQLite central. Quando Maria (no Rio de Janeiro) acessa o portal, a requisição dela consulta exatamente o mesmo arquivo SQLite no servidor.
+                </p>
+            </div>
+            <div class="space-y-2">
+                <h3 class="font-bold text-amber-300 flex items-center">
+                    <i class="fa-solid fa-cookie-bite mr-1.5"></i> Papel do Navegador (Cookies)
+                </h3>
+                <p class="text-slate-300">
+                    O navegador <strong>não armazena a base de dados principal</strong>. Cookies são usados apenas para identificar anonimamente o leitor (<code class="bg-slate-800 text-amber-200 px-1 py-0.5 rounded">noticias_reader_id</code>). O banco oficial dos dados é sempre o SQLite no servidor.
+                </p>
+            </div>
+            <div class="space-y-2">
+                <h3 class="font-bold text-rose-300 flex items-center">
+                    <i class="fa-brands fa-github mr-1.5"></i> Por que NÃO funciona no GitHub Pages?
+                </h3>
+                <p class="text-slate-300">
+                    O GitHub Pages fornece apenas hospedagem de arquivos estáticos (HTML/CSS/JS). Ele <strong>não executa processos Python/Flask</strong> nem oferece sistema de arquivos com escrita persistente. Por isso, a aplicação requer um servidor real (Docker/VPS/Render com volume de disco) para reter o arquivo SQLite.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Páginas Internas e Teste de Exclusão -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+                <h2 class="text-base font-bold text-slate-900">
+                    Páginas no SQLite & Status de Inatividade
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">
+                    Páginas com mais de 5 dias sem acesso são removidas pela rotina de limpeza e recriadas ao receber novo clique.
+                </p>
+            </div>
+            <span class="text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
+                Regra: <strong>5 dias (120h)</strong> sem acesso = Exclusão automática
+            </span>
+        </div>
+
+        {% if pages %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+                        <tr>
+                            <th class="py-3 px-4">Página</th>
+                            <th class="py-3 px-4">Matéria Associada</th>
+                            <th class="py-3 px-4">Último Acesso (UTC)</th>
+                            <th class="py-3 px-4">Tempo sem Acesso</th>
+                            <th class="py-3 px-4">Status</th>
+                            <th class="py-3 px-4 text-right">Ação de Teste</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for p in pages %}
+                            {% set days = p.days_since_last_access() %}
+                            <tr class="hover:bg-slate-50/70 transition">
+                                <td class="py-3 px-4">
+                                    <div class="font-bold text-slate-800">#{{ p.id }}</div>
+                                    <a href="{{ url_for('news.view_article_by_slug', slug=p.slug) }}" target="_blank"
+                                       class="text-brand-600 hover:underline text-[11px] font-mono truncate max-w-[140px] block" title="{{ p.slug }}">
+                                        /noticia/{{ p.slug }}
+                                    </a>
+                                </td>
+                                <td class="py-3 px-4 max-w-xs">
+                                    <div class="text-slate-800 truncate font-semibold" title="{{ p.article.title }}">
+                                        {{ p.article.title }}
+                                    </div>
+                                    <span class="text-[10px] text-slate-400 uppercase">{{ p.article.category }}</span>
+                                </td>
+                                <td class="py-3 px-4 text-slate-600 font-mono text-[11px]">
+                                    {{ p.last_accessed_at|datetime_format }}
+                                </td>
+                                <td class="py-3 px-4 font-mono">
+                                    {% if days < 1 %}
+                                        <span class="text-emerald-600 font-bold">{{ (days * 24)|round(1) }} horas</span>
+                                    {% else %}
+                                        <span class="{% if days >= 5 %}text-rose-600 font-bold{% elif days >= 4 %}text-amber-600 font-bold{% else %}text-slate-700{% endif %}">
+                                            {{ days|round(2) }} dias
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4">
+                                    {% if days >= 5 %}
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">
+                                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Expirada (&ge; 5 dias)
+                                        </span>
+                                    {% elif days >= 4 %}
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                                            <i class="fa-solid fa-clock mr-1"></i> Quase expirando
+                                        </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                            <i class="fa-solid fa-circle-check mr-1"></i> Ativa
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="py-3 px-4 text-right">
+                                    <div class="flex items-center justify-end space-x-2">
+                                        <!-- Botão para simular 5 dias sem acesso -->
+                                        <form action="{{ url_for('admin.age_page', page_id=p.id) }}" method="POST" class="inline">
+                                            <input type="hidden" name="dias" value="6">
+                                            <button type="submit" title="Simular que a página ficou 6 dias sem nenhum acesso"
+                                                    class="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 transition">
+                                                <i class="fa-solid fa-forward-fast mr-1 text-amber-600"></i> Simular +6 dias
+                                            </button>
+                                        </form>
+                                        <a href="{{ url_for('news.view_article_by_slug', slug=p.slug) }}" target="_blank"
+                                           class="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="p-8 text-center text-slate-500 text-xs">
+                Nenhuma página interna criada no momento. Acesse qualquer notícia na página inicial para gerar uma página no SQLite!
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Histórico de Execuções da Limpeza Automática -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100">
+            <h2 class="text-base font-bold text-slate-900">
+                Histórico de Manutenção do SQLite (Auditoria)
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+                Registros das tarefas periódicas que examinam as páginas e removem as inativas há mais de 5 dias.
+            </p>
+        </div>
+
+        {% if maintenance_history %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200">
+                        <tr>
+                            <th class="py-3 px-4">Data de Execução (UTC)</th>
+                            <th class="py-3 px-4">Tipo</th>
+                            <th class="py-3 px-4">Páginas Verificadas</th>
+                            <th class="py-3 px-4">Excluídas (&ge;5 dias)</th>
+                            <th class="py-3 px-4">Detalhes</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 font-medium">
+                        {% for log in maintenance_history %}
+                            <tr class="hover:bg-slate-50/70 transition">
+                                <td class="py-3 px-4 text-slate-800 font-mono text-[11px]">
+                                    {{ log.executed_at|datetime_format }}
+                                </td>
+                                <td class="py-3 px-4">
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase
+                                        {% if log.execution_type == 'manual' %}bg-sky-100 text-sky-800{% else %}bg-slate-100 text-slate-700{% endif %}">
+                                        {{ log.execution_type }}
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-slate-700 font-bold">
+                                    {{ log.pages_checked }}
+                                </td>
+                                <td class="py-3 px-4 font-bold {% if log.pages_deleted > 0 %}text-rose-600{% else %}text-emerald-600{% endif %}">
+                                    {{ log.pages_deleted }}
+                                </td>
+                                <td class="py-3 px-4 text-slate-600 text-[11px] max-w-sm truncate" title="{{ log.details }}">
+                                    {{ log.details or '—' }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="p-8 text-center text-slate-500 text-xs">
+                Nenhuma execução registrada ainda. O agendador executa automaticamente em segundo plano.
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

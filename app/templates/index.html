@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Explore — Notícias em Tempo Real{% endblock %}
+
+{% block content %}
+<div class="space-y-10" id="newsFeedContainer"
+     data-category="{{ current_category }}"
+     data-query="{{ search_query }}"
+     data-page="1"
+     data-has-more="{{ 'true' if has_more_initial else 'false' }}">
+
+    <!-- Busca Minimalista -->
+    <div class="flex items-center justify-between border-b border-neutral-200 pb-4">
+        <h1 class="text-xs uppercase tracking-widest font-semibold text-neutral-400">
+            {% if current_category and current_category != 'todas' %}
+                {{ current_category }}
+            {% else %}
+                Edição de Hoje
+            {% endif %}
+        </h1>
+        <form method="GET" action="{{ url_for('news.index') }}" class="flex items-center space-x-2">
+            {% if current_category and current_category != 'todas' %}
+                <input type="hidden" name="categoria" value="{{ current_category }}">
+            {% endif %}
+            <div class="relative">
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Buscar notícias..."
+                       class="text-xs bg-white border border-neutral-200 rounded-full px-4 py-1.5 w-44 sm:w-64 focus:outline-none focus:border-neutral-900 transition">
+            </div>
+            {% if search_query %}
+                <a href="{{ url_for('news.index', categoria=current_category) }}" class="text-xs text-neutral-400 hover:text-neutral-900">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if articles %}
+        <!-- Matéria Principal em Destaque (Primeira Notícia) -->
+        {% set featured = articles[0] %}
+        <section class="border-b border-neutral-200 pb-10">
+            <a href="{{ url_for('news.open_by_id', article_id=featured.id) }}" class="group block">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <!-- Capa Principal -->
+                    <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
+                        <img src="{{ featured.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80' }}"
+                             alt="{{ featured.title }}"
+                             onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
+                             class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
+                    </div>
+                    <!-- Conteúdo Principal -->
+                    <div class="lg:col-span-5 space-y-3">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                            {{ featured.category }}
+                        </span>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
+                            {{ featured.title }}
+                        </h2>
+                        <p class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
+                            {{ featured.description or '' }}
+                        </p>
+                        <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
+                            <span>{{ featured.author or 'Redação Explore' }}</span>
+                            <span>•</span>
+                            <span>{{ featured.published_at|time_ago }}</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+
+        <!-- Grade de Notícias (Rolagem Infinita) -->
+        <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+            {% for article in articles[1:] %}
+                <article class="group flex flex-col justify-between" data-article-id="{{ article.id }}">
+                    <a href="{{ url_for('news.open_by_id', article_id=article.id) }}" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="{{ article.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80' }}"
+                                 alt="{{ article.title }}"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            {{ article.category }}
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            {{ article.title }}
+                        </h3>
+
+                        <!-- Descrição -->
+                        {% if article.description %}
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                {{ article.description }}
+                            </p>
+                        {% endif %}
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">{{ article.author or article.source_name or 'Explore' }}</span>
+                        <span>{{ article.published_at|time_ago }}</span>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+
+        <!-- Indicador de Carregamento e Gatilho da Rolagem Infinita -->
+        <div id="infiniteScrollTrigger" class="h-6 w-full"></div>
+
+        <div id="infiniteScrollLoader" class="hidden py-8 flex flex-col items-center justify-center space-y-2">
+            <div class="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-[11px] uppercase tracking-wider text-neutral-400 font-semibold">Carregando mais notícias...</span>
+        </div>
+
+        <div id="infiniteScrollEnd" class="{% if not has_more_initial and articles|length > 1 %}block{% else %}hidden{% endif %} py-8 text-center text-xs text-neutral-400 border-t border-neutral-100 mt-6">
+            <span>Você visualizou todas as matérias mais recentes.</span>
+        </div>
+
+    {% else %}
+        <!-- Estado Vazio Simples -->
+        <div class="text-center py-20">
+            <p class="font-serif text-xl text-neutral-700 mb-4">Nenhuma matéria encontrada no momento.</p>
+            <form action="{{ url_for('news.sync_news') }}" method="POST" class="inline">
+                <button type="submit" class="px-5 py-2 bg-neutral-900 text-white rounded-full text-xs font-semibold hover:bg-neutral-800 transition">
+                    Carregar Notícias em Tempo Real
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

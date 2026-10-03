@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} — Explore{% endblock %}
+
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block og_description %}{{ article.short_summary }}{% endblock %}
+{% block og_image %}{{ article.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80' }}{% endblock %}
+{% block og_url %}{{ request.url }}{% endblock %}
+
+{% block content %}
+<article class="max-w-3xl mx-auto space-y-8" data-article-slug="{{ page.slug }}" data-article-id="{{ article.id }}">
+
+    <!-- Navegação de Retorno -->
+    <div>
+        <a href="{{ url_for('news.index') }}" class="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-neutral-400 hover:text-neutral-900 transition">
+            <i class="fa-solid fa-arrow-left mr-2 text-[10px]"></i> Voltar para o Explore
+        </a>
+    </div>
+
+    <!-- Cabeçalho da Matéria: Categoria, Título, Autor, Data -->
+    <header class="space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-blue-700 block">
+            {{ article.category }}
+        </span>
+
+        <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-950 leading-tight tracking-tight">
+            {{ article.title }}
+        </h1>
+
+        <!-- Autor e Data -->
+        <div class="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-neutral-200 text-xs text-neutral-500 font-medium">
+            <div class="flex items-center space-x-2">
+                <span>Por <strong class="text-neutral-900">{{ article.author or article.source_name or 'Redação Explore' }}</strong></span>
+                <span>•</span>
+                <span>{{ article.published_at|datetime_format }}</span>
+            </div>
+
+            <!-- Botão de Compartilhar no Facebook (Topo) -->
+            <div class="flex items-center space-x-2">
+                <button onclick="shareOnFacebook()"
+                        title="Compartilhar no Facebook"
+                        class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-[#1877F2] hover:bg-[#166fe5] text-white text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer">
+                    <i class="fa-brands fa-facebook-f text-[11px]"></i>
+                    <span>Compartilhar</span>
+                </button>
+                <button onclick="copyArticleLink()"
+                        title="Copiar Link da Matéria"
+                        class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs cursor-pointer">
+                    <i class="fa-regular fa-clone text-[11px]"></i>
+                    <span id="copyLinkText">Copiar Link</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Capa Principal em Alta Resolução -->
+    <div class="aspect-16/10 rounded-2xl overflow-hidden bg-neutral-100 shadow-sm">
+        <img src="{{ article.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80' }}"
+             alt="{{ article.title }}"
+             onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
+             class="w-full h-full object-cover">
+    </div>
+
+    <!-- Lead / Resumo Curto -->
+    {% if article.description %}
+        <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
+            <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
+                {{ article.description }}
+            </p>
+        </div>
+    {% endif %}
+
+    <!-- Matéria Completa com Múltiplos Parágrafos Enriquecidos -->
+    <div class="font-serif text-lg leading-relaxed text-neutral-800 space-y-6 pt-2">
+        {% set paragraphs = article.get_reading_paragraphs() %}
+        {% for p in paragraphs %}
+            {% if loop.index == 1 and p == article.description %}
+                {# O lead já foi destacado acima #}
+            {% else %}
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">{{ p }}</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Seção de Compartilhamento no Rodapé da Matéria -->
+    <div class="mt-10 pt-8 border-t border-neutral-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+            <p class="font-serif text-base font-semibold text-neutral-900">Gostou da notícia?</p>
+            <p class="text-xs text-neutral-500">Compartilhe esta publicação com seus amigos no Facebook.</p>
+        </div>
+
+        <button onclick="shareOnFacebook()"
+                class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-full bg-[#1877F2] hover:bg-[#166fe5] text-white text-xs font-semibold shadow-sm transition active:scale-95 cursor-pointer">
+            <i class="fa-brands fa-facebook-f text-sm"></i>
+            <span>Compartilhar no Facebook</span>
+        </button>
+    </div>
+
+    <!-- Prévia Visual do Card Oficial no Facebook -->
+    <div class="mt-6 p-5 rounded-2xl bg-neutral-50 border border-neutral-200/90 space-y-3">
+        <div class="flex items-center justify-between text-[11px] font-bold text-neutral-500 uppercase tracking-wider">
+            <span class="flex items-center space-x-1.5 text-[#1877F2]">
+                <i class="fa-brands fa-facebook text-sm"></i>
+                <span>Prévia do Card no Facebook (Open Graph)</span>
+            </span>
+            <span class="text-neutral-400">1200 × 630 px</span>
+        </div>
+
+        <!-- Card Mockup Fiel ao Facebook -->
+        <div class="max-w-md mx-auto bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition">
+            <div class="aspect-16/9 w-full bg-neutral-100 overflow-hidden">
+                <img src="{{ article.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80' }}"
+                     alt="{{ article.title }}"
+                     class="w-full h-full object-cover">
+            </div>
+            <div class="p-3 bg-[#F0F2F5]/70 space-y-1">
+                <div class="text-[10px] text-neutral-500 uppercase font-semibold tracking-wider">
+                    explore • notícias
+                </div>
+                <div class="font-bold text-neutral-900 text-xs sm:text-sm leading-snug line-clamp-2">
+                    {{ article.title }}
+                </div>
+                <div class="text-neutral-600 text-xs line-clamp-1 leading-normal">
+                    {{ article.short_summary }}
+                </div>
+            </div>
+        </div>
+
+        <p class="text-[11px] text-center text-neutral-500 leading-relaxed">
+            Metatags configuradas: Foto em alta resolução (<code class="bg-neutral-200/60 px-1 py-0.5 rounded text-[10px]">og:image</code>), Título da matéria (<code class="bg-neutral-200/60 px-1 py-0.5 rounded text-[10px]">og:title</code>) e Frase de resumo (<code class="bg-neutral-200/60 px-1 py-0.5 rounded text-[10px]">og:description</code>).
+        </p>
+    </div>
+
+    <!-- Chamados para Notícias Recentes -->
+    {% if similar_articles %}
+        <section class="mt-14 pt-10 border-t border-neutral-200 space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">Recomendadas</span>
+                    <h2 class="font-serif text-2xl font-bold text-neutral-950">Notícias Recentes</h2>
+                </div>
+                <a href="{{ url_for('news.index', categoria=article.category) }}" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
+                    Ver mais em {{ article.category }} &rarr;
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {% for item in similar_articles %}
+                    <a href="{{ url_for('news.open_by_id', article_id=item.id) }}" class="group block space-y-3">
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="{{ item.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80' }}"
+                                 alt="{{ item.title }}"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            {{ item.category }}
+                        </div>
+                        <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
+                            {{ item.title }}
+                        </h3>
+                        <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
+                            <span class="truncate max-w-[120px]">{{ item.author or item.source_name or 'Explore' }}</span>
+                            <span>{{ item.published_at|time_ago }}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- Fonte Original -->
+    {% if article.original_url %}
+        <div class="pt-8 text-center text-xs text-neutral-400">
+            <a href="{{ article.original_url }}" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
+                Ver fonte original em {{ article.source_name or 'agência parceira' }}
+            </a>
+        </div>
+    {% endif %}
+
+</article>
+
+<!-- Modal Informativo e Seletor de Domínio Público para Compartilhamento -->
+<div id="fbShareModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-950/60 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-neutral-200 space-y-4">
+        <div class="flex items-start justify-between">
+            <div class="flex items-center space-x-2 text-[#1877F2]">
+                <i class="fa-brands fa-facebook text-xl"></i>
+                <h3 class="font-bold text-neutral-900 text-base">Compartilhar no Facebook</h3>
+            </div>
+            <button onclick="closeShareModal()" class="text-neutral-400 hover:text-neutral-700 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="text-xs text-neutral-600 space-y-2 leading-relaxed">
+            <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-900">
+                <strong>Por que apareceu "Cookie check" do AI Studio?</strong><br>
+                O endereço atual (<code class="bg-amber-100/70 px-1 py-0.5 rounded text-[11px]">ais-dev-...</code>) é um ambiente de desenvolvimento <strong>privado</strong> do Google Cloud. Quando o robô do Facebook tenta ler essa URL para montar o card, a segurança do Google bloqueia o acesso e devolve uma tela de verificação de login ("Cookie check").
+            </div>
+            <p>
+                No seu <strong>GitHub Pages</strong> ou domínio próprio na web, o site é 100% público e o Facebook lê diretamente a <strong>foto</strong>, o <strong>título</strong> e a <strong>frase de resumo</strong>!
+            </p>
+        </div>
+
+        <div class="space-y-1.5">
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-neutral-500">
+                Seu Domínio Público (GitHub Pages ou Site):
+            </label>
+            <input type="url"
+                   id="customPublicUrlInput"
+                   placeholder="https://seu-usuario.github.io/seu-repositorio"
+                   class="w-full text-xs bg-neutral-50 border border-neutral-300 rounded-lg px-3 py-2 focus:outline-none focus:border-blue-600 transition">
+            <p class="text-[10px] text-neutral-400">
+                Exemplo: https://meu-usuario.github.io/meu-blog
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-end gap-2 pt-2 border-t border-neutral-100">
+            <button onclick="shareDirectDevUrl()"
+                    class="w-full sm:w-auto px-4 py-2 rounded-lg text-xs text-neutral-600 hover:text-neutral-900 font-medium transition cursor-pointer">
+                Compartilhar URL atual mesmo assim
+            </button>
+            <button onclick="shareWithCustomDomain()"
+                    class="w-full sm:w-auto px-5 py-2 rounded-lg bg-[#1877F2] hover:bg-[#166fe5] text-white text-xs font-semibold shadow-xs transition cursor-pointer">
+                Compartilhar no Facebook
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ARTICLE_SLUG = document.querySelector('article[data-article-slug]')?.getAttribute('data-article-slug') || '';
+    const SAVED_PUBLIC_URL_KEY = 'explore_public_base_url';
+
+    function isPrivateDevEnvironment() {
+        const host = window.location.hostname;
+        return host.includes('ais-dev-') || host.includes('localhost') || host === '127.0.0.1';
+    }
+
+    function shareOnFacebook() {
+        const savedDomain = localStorage.getItem(SAVED_PUBLIC_URL_KEY);
+
+        // Se estiver no ambiente privado de desenvolvimento do Google e ainda não definiu um domínio público
+        if (isPrivateDevEnvironment() && !savedDomain) {
+            const modal = document.getElementById('fbShareModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                const input = document.getElementById('customPublicUrlInput');
+                if (input && savedDomain) input.value = savedDomain;
+                return;
+            }
+        }
+
+        openFacebookSharer(getShareableUrl());
+    }
+
+    function getShareableUrl() {
+        const savedDomain = localStorage.getItem(SAVED_PUBLIC_URL_KEY);
+        if (savedDomain && ARTICLE_SLUG) {
+            const cleanDomain = savedDomain.replace(/\/+$/, '');
+            // Se for GitHub Pages estático:
+            return `${cleanDomain}/noticia/${ARTICLE_SLUG}/index.html`;
+        }
+        return window.location.href;
+    }
+
+    function openFacebookSharer(urlToShare) {
+        const fbUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(urlToShare);
+        window.open(fbUrl, 'Compartilhar no Facebook', 'width=620,height=480,menubar=no,toolbar=no,resizable=yes');
+    }
+
+    function shareDirectDevUrl() {
+        closeShareModal();
+        openFacebookSharer(window.location.href);
+    }
+
+    function shareWithCustomDomain() {
+        const input = document.getElementById('customPublicUrlInput');
+        let domain = (input?.value || '').trim();
+        if (domain) {
+            if (!domain.startsWith('http://') && !domain.startsWith('https://')) {
+                domain = 'https://' + domain;
+            }
+            localStorage.setItem(SAVED_PUBLIC_URL_KEY, domain);
+        }
+        closeShareModal();
+        openFacebookSharer(getShareableUrl());
+    }
+
+    function closeShareModal() {
+        const modal = document.getElementById('fbShareModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function copyArticleLink() {
+        const shareUrl = getShareableUrl();
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            const btnText = document.getElementById('copyLinkText');
+            if (btnText) {
+                btnText.innerText = 'Copiado!';
+                setTimeout(() => {
+                    btnText.innerText = 'Copiar Link';
+                }, 2500);
+            }
+        });
+    }
+
+    // Inicializa o input com domínio salvo se houver
+    document.addEventListener('DOMContentLoaded', () => {
+        const saved = localStorage.getItem(SAVED_PUBLIC_URL_KEY);
+        const input = document.getElementById('customPublicUrlInput');
+        if (input && saved) input.value = saved;
+    });
+</script>
+{% endblock %}

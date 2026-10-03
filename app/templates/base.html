@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Explore — Notícias em Tempo Real{% endblock %}</title>
+
+    <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
+    <meta property="og:site_name" content="Explore">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}Explore — Notícias em Tempo Real{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Explore o mundo com notícias atualizadas em tempo real, cotações de moedas, mercado financeiro e fusos globais.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80{% endblock %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="{% block og_url %}{{ request.base_url }}{% endblock %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ self.og_title() }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ self.og_description() }}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ self.og_image() }}{% endblock %}">
+
+    <!-- Tipografia Editorial: Inter & Serif clássico -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Source Serif 4"', 'serif'],
+                        display: ['"Instrument Serif"', 'serif'],
+                    },
+                    colors: {
+                        facebook: '#1877F2',
+                        ticker: {
+                            blue: '#1d4ed8',
+                            dark: '#1e40af',
+                        },
+                        ink: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="bg-[#faf9f6] text-ink-900 font-sans min-h-screen flex flex-col antialiased selection:bg-neutral-900 selection:text-white">
+
+    <!-- Tira de Cor Azul: Cotações, Ações e Fusos Horários em Movimento Contínuo -->
+    <div class="bg-blue-700 text-white text-[11px] font-medium tracking-wide overflow-hidden border-b border-blue-800 shadow-xs select-none">
+        <div class="ticker-wrapper py-2 flex whitespace-nowrap">
+            <!-- Faixa 1 (duplicada para animação infinita suave) -->
+            <div class="ticker-track flex items-center space-x-8 px-4">
+                <!-- Fusos Horários dos Países -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Fusos Globais</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇧🇷</span> <span>Brasília</span> <strong class="text-white font-mono tz-clock" data-tz="America/Sao_Paulo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇺🇸</span> <span>Nova York</span> <strong class="text-white font-mono tz-clock" data-tz="America/New_York">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇬🇧</span> <span>Londres</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/London">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇫🇷</span> <span>Paris</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/Paris">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇯🇵</span> <span>Tóquio</span> <strong class="text-white font-mono tz-clock" data-tz="Asia/Tokyo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇦🇺</span> <span>Sydney</span> <strong class="text-white font-mono tz-clock" data-tz="Australia/Sydney">--:--</strong>
+                    </span>
+                </div>
+
+                <!-- Cotação de Moedas -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Moedas</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>USD/BRL</span> <strong class="text-white font-mono">R$ 5,38</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,42%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>EUR/BRL</span> <strong class="text-white font-mono">R$ 5,86</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>GBP/BRL</span> <strong class="text-white font-mono">R$ 6,94</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,28%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>BTC/USD</span> <strong class="text-white font-mono">$64.850</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ETH/USD</span> <strong class="text-white font-mono">$3.420</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,30%</span>
+                    </span>
+                </div>
+
+                <!-- Ações e Índices de Mercado -->
+                <div class="flex items-center space-x-5 text-blue-100 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Ações & Índices</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>IBOVESPA</span> <strong class="text-white font-mono">132.840 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,74%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>PETR4</span> <strong class="text-white font-mono">R$ 38,45</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,18%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>VALE3</span> <strong class="text-white font-mono">R$ 62,30</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,45%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ITUB4</span> <strong class="text-white font-mono">R$ 34,90</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,58%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>S&P 500</span> <strong class="text-white font-mono">5.762 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,48%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NASDAQ</span> <strong class="text-white font-mono">18.180 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,82%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>APPLE (AAPL)</span> <strong class="text-white font-mono">$228,50</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,95%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NVIDIA (NVDA)</span> <strong class="text-white font-mono">$125,40</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,40%</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Faixa 2 (cópia exata para criar o loop contínuo sem cortes) -->
+            <div class="ticker-track flex items-center space-x-8 px-4" aria-hidden="true">
+                <!-- Fusos Horários dos Países -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Fusos Globais</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇧🇷</span> <span>Brasília</span> <strong class="text-white font-mono tz-clock" data-tz="America/Sao_Paulo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇺🇸</span> <span>Nova York</span> <strong class="text-white font-mono tz-clock" data-tz="America/New_York">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇬🇧</span> <span>Londres</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/London">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇫🇷</span> <span>Paris</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/Paris">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇯🇵</span> <span>Tóquio</span> <strong class="text-white font-mono tz-clock" data-tz="Asia/Tokyo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇦🇺</span> <span>Sydney</span> <strong class="text-white font-mono tz-clock" data-tz="Australia/Sydney">--:--</strong>
+                    </span>
+                </div>
+
+                <!-- Cotação de Moedas -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Moedas</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>USD/BRL</span> <strong class="text-white font-mono">R$ 5,38</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,42%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>EUR/BRL</span> <strong class="text-white font-mono">R$ 5,86</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>GBP/BRL</span> <strong class="text-white font-mono">R$ 6,94</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,28%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>BTC/USD</span> <strong class="text-white font-mono">$64.850</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ETH/USD</span> <strong class="text-white font-mono">$3.420</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,30%</span>
+                    </span>
+                </div>
+
+                <!-- Ações e Índices de Mercado -->
+                <div class="flex items-center space-x-5 text-blue-100 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Ações & Índices</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>IBOVESPA</span> <strong class="text-white font-mono">132.840 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,74%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>PETR4</span> <strong class="text-white font-mono">R$ 38,45</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,18%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>VALE3</span> <strong class="text-white font-mono">R$ 62,30</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,45%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ITUB4</span> <strong class="text-white font-mono">R$ 34,90</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,58%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>S&P 500</span> <strong class="text-white font-mono">5.762 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,48%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NASDAQ</span> <strong class="text-white font-mono">18.180 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,82%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>APPLE (AAPL)</span> <strong class="text-white font-mono">$228,50</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,95%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NVIDIA (NVDA)</span> <strong class="text-white font-mono">$125,40</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,40%</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar Minimalista -->
+    <div class="border-b border-neutral-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-14">
+                <!-- Data Atual -->
+                <div class="text-[11px] uppercase tracking-widest text-neutral-500 font-medium hidden sm:block">
+                    <span id="currentDate">Notícias em Tempo Real</span>
+                </div>
+
+                <!-- Logotipo / Nome do Blog: Explore -->
+                <a href="{{ url_for('news.index') }}" class="font-display text-3xl sm:text-4xl tracking-tight text-neutral-950 hover:opacity-85 transition mx-auto sm:mx-0 flex items-center space-x-1.5">
+                    <span>Explore</span>
+                </a>
+
+                <!-- Ações Rápidas: Atualizar Notícias -->
+                <div class="flex items-center space-x-2">
+                    <form action="{{ url_for('news.sync_news') }}" method="POST" class="inline">
+                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
+                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
+                            <span>Atualizar</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Navegação por Categorias: Limpa e Minimalista -->
+            <nav class="flex items-center space-x-1 sm:space-x-4 overflow-x-auto py-2 border-t border-neutral-100 scrollbar-none text-xs uppercase tracking-wider font-semibold">
+                <a href="{{ url_for('news.index') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if not request.args.get('categoria') or request.args.get('categoria') == 'todas' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Todas
+                </a>
+                <a href="{{ url_for('news.index', categoria='tecnologia') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if request.args.get('categoria') == 'tecnologia' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Tecnologia
+                </a>
+                <a href="{{ url_for('news.index', categoria='negocios') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if request.args.get('categoria') == 'negocios' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Negócios
+                </a>
+                <a href="{{ url_for('news.index', categoria='ciencia') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if request.args.get('categoria') == 'ciencia' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Ciência
+                </a>
+                <a href="{{ url_for('news.index', categoria='saude') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if request.args.get('categoria') == 'saude' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Saúde
+                </a>
+                <a href="{{ url_for('news.index', categoria='esportes') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if request.args.get('categoria') == 'esportes' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Esportes
+                </a>
+                <a href="{{ url_for('news.index', categoria='entretenimento') }}" class="px-2.5 py-1 rounded transition whitespace-nowrap {% if request.args.get('categoria') == 'entretenimento' %}text-neutral-950 border-b-2 border-neutral-900{% else %}text-neutral-500 hover:text-neutral-900{% endif %}">
+                    Cultura
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Conteúdo do Blog -->
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Rodapé Simples e Minimalista -->
+    <footer class="border-t border-neutral-200 mt-16 py-8 text-center text-xs text-neutral-400">
+        <div class="max-w-5xl mx-auto px-4">
+            <p class="font-display text-2xl text-neutral-900 mb-1">Explore</p>
+            <p>Notícias do Brasil e do mundo em tempo real.</p>
+        </div>
+    </footer>
+
+    <!-- Botão Voltar ao Topo: Seta Transparente Flutuante com Efeito Blur -->
+    <button id="backToTopBtn"
+            type="button"
+            title="Voltar ao topo da página"
+            aria-label="Voltar ao topo da página"
+            class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white/70 hover:bg-white/95 text-neutral-800 hover:text-neutral-950 backdrop-blur-md border border-neutral-300/80 shadow-md hover:shadow-lg transition-all duration-300 opacity-0 pointer-events-none translate-y-3 focus:outline-none cursor-pointer flex items-center justify-center w-11 h-11 active:scale-90">
+        <i class="fa-solid fa-arrow-up text-sm"></i>
+    </button>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

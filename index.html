@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore — Notícias em Tempo Real</title>
+
+    <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
+    <meta property="og:site_name" content="Explore">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Explore — Notícias em Tempo Real">
+    <meta property="og:description" content="Explore o mundo com notícias atualizadas em tempo real, cotações de moedas, mercado financeiro e fusos globais.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="http://localhost/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Explore — Notícias em Tempo Real">
+    <meta name="twitter:description" content="Explore o mundo com notícias atualizadas em tempo real, cotações de moedas, mercado financeiro e fusos globais.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80">
+
+    <!-- Tipografia Editorial: Inter & Serif clássico -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Source Serif 4"', 'serif'],
+                        display: ['"Instrument Serif"', 'serif'],
+                    },
+                    colors: {
+                        facebook: '#1877F2',
+                        ticker: {
+                            blue: '#1d4ed8',
+                            dark: '#1e40af',
+                        },
+                        ink: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body class="bg-[#faf9f6] text-ink-900 font-sans min-h-screen flex flex-col antialiased selection:bg-neutral-900 selection:text-white">
+
+    <!-- Tira de Cor Azul: Cotações, Ações e Fusos Horários em Movimento Contínuo -->
+    <div class="bg-blue-700 text-white text-[11px] font-medium tracking-wide overflow-hidden border-b border-blue-800 shadow-xs select-none">
+        <div class="ticker-wrapper py-2 flex whitespace-nowrap">
+            <!-- Faixa 1 (duplicada para animação infinita suave) -->
+            <div class="ticker-track flex items-center space-x-8 px-4">
+                <!-- Fusos Horários dos Países -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Fusos Globais</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇧🇷</span> <span>Brasília</span> <strong class="text-white font-mono tz-clock" data-tz="America/Sao_Paulo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇺🇸</span> <span>Nova York</span> <strong class="text-white font-mono tz-clock" data-tz="America/New_York">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇬🇧</span> <span>Londres</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/London">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇫🇷</span> <span>Paris</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/Paris">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇯🇵</span> <span>Tóquio</span> <strong class="text-white font-mono tz-clock" data-tz="Asia/Tokyo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇦🇺</span> <span>Sydney</span> <strong class="text-white font-mono tz-clock" data-tz="Australia/Sydney">--:--</strong>
+                    </span>
+                </div>
+
+                <!-- Cotação de Moedas -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Moedas</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>USD/BRL</span> <strong class="text-white font-mono">R$ 5,38</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,42%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>EUR/BRL</span> <strong class="text-white font-mono">R$ 5,86</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>GBP/BRL</span> <strong class="text-white font-mono">R$ 6,94</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,28%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>BTC/USD</span> <strong class="text-white font-mono">$64.850</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ETH/USD</span> <strong class="text-white font-mono">$3.420</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,30%</span>
+                    </span>
+                </div>
+
+                <!-- Ações e Índices de Mercado -->
+                <div class="flex items-center space-x-5 text-blue-100 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Ações & Índices</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>IBOVESPA</span> <strong class="text-white font-mono">132.840 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,74%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>PETR4</span> <strong class="text-white font-mono">R$ 38,45</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,18%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>VALE3</span> <strong class="text-white font-mono">R$ 62,30</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,45%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ITUB4</span> <strong class="text-white font-mono">R$ 34,90</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,58%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>S&P 500</span> <strong class="text-white font-mono">5.762 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,48%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NASDAQ</span> <strong class="text-white font-mono">18.180 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,82%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>APPLE (AAPL)</span> <strong class="text-white font-mono">$228,50</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,95%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NVIDIA (NVDA)</span> <strong class="text-white font-mono">$125,40</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,40%</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Faixa 2 (cópia exata para criar o loop contínuo sem cortes) -->
+            <div class="ticker-track flex items-center space-x-8 px-4" aria-hidden="true">
+                <!-- Fusos Horários dos Países -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Fusos Globais</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇧🇷</span> <span>Brasília</span> <strong class="text-white font-mono tz-clock" data-tz="America/Sao_Paulo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇺🇸</span> <span>Nova York</span> <strong class="text-white font-mono tz-clock" data-tz="America/New_York">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇬🇧</span> <span>Londres</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/London">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇫🇷</span> <span>Paris</span> <strong class="text-white font-mono tz-clock" data-tz="Europe/Paris">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇯🇵</span> <span>Tóquio</span> <strong class="text-white font-mono tz-clock" data-tz="Asia/Tokyo">--:--</strong>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span class="text-sm">🇦🇺</span> <span>Sydney</span> <strong class="text-white font-mono tz-clock" data-tz="Australia/Sydney">--:--</strong>
+                    </span>
+                </div>
+
+                <!-- Cotação de Moedas -->
+                <div class="flex items-center space-x-5 text-blue-100 border-r border-blue-600/80 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Moedas</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>USD/BRL</span> <strong class="text-white font-mono">R$ 5,38</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,42%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>EUR/BRL</span> <strong class="text-white font-mono">R$ 5,86</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>GBP/BRL</span> <strong class="text-white font-mono">R$ 6,94</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,28%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>BTC/USD</span> <strong class="text-white font-mono">$64.850</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,15%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ETH/USD</span> <strong class="text-white font-mono">$3.420</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,30%</span>
+                    </span>
+                </div>
+
+                <!-- Ações e Índices de Mercado -->
+                <div class="flex items-center space-x-5 text-blue-100 pr-6">
+                    <span class="text-white font-bold uppercase tracking-wider text-[10px] bg-blue-900/60 px-2 py-0.5 rounded">Ações & Índices</span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>IBOVESPA</span> <strong class="text-white font-mono">132.840 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,74%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>PETR4</span> <strong class="text-white font-mono">R$ 38,45</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +1,18%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>VALE3</span> <strong class="text-white font-mono">R$ 62,30</strong> <span class="text-rose-300 font-mono text-[10px]">▼ -0,45%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>ITUB4</span> <strong class="text-white font-mono">R$ 34,90</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,58%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>S&P 500</span> <strong class="text-white font-mono">5.762 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,48%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NASDAQ</span> <strong class="text-white font-mono">18.180 pts</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,82%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>APPLE (AAPL)</span> <strong class="text-white font-mono">$228,50</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +0,95%</span>
+                    </span>
+                    <span class="inline-flex items-center space-x-1.5">
+                        <span>NVIDIA (NVDA)</span> <strong class="text-white font-mono">$125,40</strong> <span class="text-emerald-300 font-mono text-[10px]">▲ +2,40%</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar Minimalista -->
+    <div class="border-b border-neutral-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6">
+            <div class="flex items-center justify-between h-14">
+                <!-- Data Atual -->
+                <div class="text-[11px] uppercase tracking-widest text-neutral-500 font-medium hidden sm:block">
+                    <span id="currentDate">Notícias em Tempo Real</span>
+                </div>
+
+                <!-- Logotipo / Nome do Blog: Explore -->
+                <a href="./index.html" class="font-display text-3xl sm:text-4xl tracking-tight text-neutral-950 hover:opacity-85 transition mx-auto sm:mx-0 flex items-center space-x-1.5">
+                    <span>Explore</span>
+                </a>
+
+                <!-- Ações Rápidas: Atualizar Notícias -->
+                <div class="flex items-center space-x-2">
+                    <form action="/sincronizar" method="POST" class="inline">
+                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
+                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
+                            <span>Atualizar</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Navegação por Categorias: Limpa e Minimalista -->
+            <nav class="flex items-center space-x-1 sm:space-x-4 overflow-x-auto py-2 border-t border-neutral-100 scrollbar-none text-xs uppercase tracking-wider font-semibold">
+                <a href="./index.html" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-950 border-b-2 border-neutral-900">
+                    Todas
+                </a>
+                <a href="./index.html?categoria=tecnologia" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-500 hover:text-neutral-900">
+                    Tecnologia
+                </a>
+                <a href="./index.html?categoria=negocios" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-500 hover:text-neutral-900">
+                    Negócios
+                </a>
+                <a href="./index.html?categoria=ciencia" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-500 hover:text-neutral-900">
+                    Ciência
+                </a>
+                <a href="./index.html?categoria=saude" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-500 hover:text-neutral-900">
+                    Saúde
+                </a>
+                <a href="./index.html?categoria=esportes" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-500 hover:text-neutral-900">
+                    Esportes
+                </a>
+                <a href="./index.html?categoria=entretenimento" class="px-2.5 py-1 rounded transition whitespace-nowrap text-neutral-500 hover:text-neutral-900">
+                    Cultura
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Conteúdo do Blog -->
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
+        
+<div class="space-y-10" id="newsFeedContainer"
+     data-category="todas"
+     data-query=""
+     data-page="1"
+     data-has-more="true">
+
+    <!-- Busca Minimalista -->
+    <div class="flex items-center justify-between border-b border-neutral-200 pb-4">
+        <h1 class="text-xs uppercase tracking-widest font-semibold text-neutral-400">
+            
+                Edição de Hoje
+            
+        </h1>
+        <form method="GET" action="./index.html" class="flex items-center space-x-2">
+            
+            <div class="relative">
+                <input type="text" name="q" value="" placeholder="Buscar notícias..."
+                       class="text-xs bg-white border border-neutral-200 rounded-full px-4 py-1.5 w-44 sm:w-64 focus:outline-none focus:border-neutral-900 transition">
+            </div>
+            
+        </form>
+    </div>
+
+    
+        <!-- Matéria Principal em Destaque (Primeira Notícia) -->
+        
+        <section class="border-b border-neutral-200 pb-10">
+            <a href="./noticia/abrir/618/index.html" class="group block">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <!-- Capa Principal -->
+                    <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
+                        <img src="https://sm.ign.com/t/ign_br/news/h/how-gta-6s/how-gta-6s-jason-and-lucia-have-evolved-since-2023-in-pictur_cjmt.1200.jpg"
+                             alt="GTA 6: a evolução de Jason e Lucia desde 2023, em imagens"
+                             onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
+                             class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
+                    </div>
+                    <!-- Conteúdo Principal -->
+                    <div class="lg:col-span-5 space-y-3">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                            geral
+                        </span>
+                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
+                            GTA 6: a evolução de Jason e Lucia desde 2023, em imagens
+                        </h2>
+                        <p class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
+                            Três anos de evolução
+                        </p>
+                        <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
+                            <span>Allana Aristides, Cade Onder</span>
+                            <span>•</span>
+                            <span>há 1 dia</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </section>
+
+        <!-- Grade de Notícias (Rolagem Infinita) -->
+        <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
+            
+                <article class="group flex flex-col justify-between" data-article-id="619">
+                    <a href="./noticia/abrir/619/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://www.edivaldobrito.com.br/wp-content/uploads/2026/10/cd-projekt-red-lanca-hotfix-para-ajustar-iluminacao-do-witcher-3-remastered-no-pc.webp"
+                                 alt="CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            tecnologia
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                Conheça o hotfix do Witcher 3 que traz ajustes na iluminação e corrige problemas de áudio no PC.
+O post CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC apareceu primeiro em Blog do Edivaldo - Informações e Notícias sobre Linu…
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">Edivaldo Brito</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="620">
+                    <a href="./noticia/abrir/620/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/10/01143937/770-podcast-contra-corrente.png"
+                                 alt="Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            geral
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                Nove semanas depois tudo continua igual em Ceuta e Pedro Sanchez tem fechado os olhos a esse problema e tapado com problemas de corrupção ou a polémica de habitação de Maricarmen.
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">José Manuel Fernandes</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="143">
+                    <a href="./noticia/abrir/143/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/c448/live/229088b0-b598-11f1-8ac1-4d5f189a56fb.jpg"
+                                 alt="Como justificar o voto e o que acontece se você não votar"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            geral
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            Como justificar o voto e o que acontece se você não votar
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                Veja os prazos para justificar a ausência às urnas em 2026 e as consequências para quem não vota, não justifica e nem paga a multa.
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">https://www.facebook.com/bbcnews</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="144">
+                    <a href="./noticia/abrir/144/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/10/02/1205527569-angelica.jpg"
+                                 alt="Arrasada, Angélica faz revelação sobre seu acidente de avião com filhos na morte de Lito Sousa"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            geral
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            Arrasada, Angélica faz revelação sobre seu acidente de avião com filhos na morte de Lito Sousa
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                Despedida e homenagem na TV! Angélica faz revelação sobre seu acidente de avião com filhos na morte de Lito Sousa; veja mais
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">Contigo</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="145">
+                    <a href="./noticia/abrir/145/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://i.metroimg.com/jCzLMGB421wo-xNJxy4seVAoR4PonZKdAkrc7OVTyaM/rs:fill:1200:800:1/g:no/q:85/f:webp/plain/https://images.metroimg.com/2026/10/lito-sousa-1.jpg"
+                                 alt="Velório de Lito Sousa será dividido em dois para receber fãs e familiares"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            geral
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            Velório de Lito Sousa será dividido em dois para receber fãs e familiares
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                A informação da despedida do influenciador de aviação e youtuber foi divulgada no perfil oficial dele, na noite de quinta-feira (1º/10)
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">Fábia Oliveira</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="214">
+                    <a href="./noticia/abrir/214/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://img.odcdn.com.br/wp-content/uploads/2026/10/hero-tvs-oled-e-qled-1.jpg"
+                                 alt="Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            tecnologia
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                Se você está pensando em trocar a televisão por um modelo mais moderno, este é o momento certo. Reunimos duas ótimas opções de Smart TVs com tecnologia QLED disponíveis agora na Amazon — com recursos como Google TV, HDR, conectividade avançada e qualidade de …
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">Eduardo Nuvens</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+        </div>
+
+        <!-- Indicador de Carregamento e Gatilho da Rolagem Infinita -->
+        <div id="infiniteScrollTrigger" class="h-6 w-full"></div>
+
+        <div id="infiniteScrollLoader" class="hidden py-8 flex flex-col items-center justify-center space-y-2">
+            <div class="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span class="text-[11px] uppercase tracking-wider text-neutral-400 font-semibold">Carregando mais notícias...</span>
+        </div>
+
+        <div id="infiniteScrollEnd" class="hidden py-8 text-center text-xs text-neutral-400 border-t border-neutral-100 mt-6">
+            <span>Você visualizou todas as matérias mais recentes.</span>
+        </div>
+
+    
+
+</div>
+
+    </main>
+
+    <!-- Rodapé Simples e Minimalista -->
+    <footer class="border-t border-neutral-200 mt-16 py-8 text-center text-xs text-neutral-400">
+        <div class="max-w-5xl mx-auto px-4">
+            <p class="font-display text-2xl text-neutral-900 mb-1">Explore</p>
+            <p>Notícias do Brasil e do mundo em tempo real.</p>
+        </div>
+    </footer>
+
+    <!-- Botão Voltar ao Topo: Seta Transparente Flutuante com Efeito Blur -->
+    <button id="backToTopBtn"
+            type="button"
+            title="Voltar ao topo da página"
+            aria-label="Voltar ao topo da página"
+            class="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-white/70 hover:bg-white/95 text-neutral-800 hover:text-neutral-950 backdrop-blur-md border border-neutral-300/80 shadow-md hover:shadow-lg transition-all duration-300 opacity-0 pointer-events-none translate-y-3 focus:outline-none cursor-pointer flex items-center justify-center w-11 h-11 active:scale-90">
+        <i class="fa-solid fa-arrow-up text-sm"></i>
+    </button>
+
+    <script src="./static/js/main.js"></script>
+    
+<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

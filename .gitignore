@@ -1,0 +1,40 @@
+# Node.js
+node_modules/
+build/
+dist/
+coverage/
+.DS_Store
+*.log
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+.pytest_cache/
+
+# SQLite e Dados Locais de Produção (conforme requisitos de privacidade e persistência)
+instance/*.sqlite3
+instance/*.db
+data/*.sqlite3
+data/*.db
+*.sqlite3
+*.db
+backups/*.sqlite3
+backups/*.db
+
+# Manter estrutura de diretórios no Git sem dados reais de leitores
+!instance/.gitkeep
+!data/.gitkeep
+!backups/.gitkeep
