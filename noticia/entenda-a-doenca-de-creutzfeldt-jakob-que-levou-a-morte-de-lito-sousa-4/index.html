@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="/sincronizar" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 
@@ -279,7 +281,7 @@
     <!-- Cabeçalho da Matéria: Categoria, Título, Autor, Data -->
     <header class="space-y-4">
         <span class="text-xs font-bold uppercase tracking-widest text-blue-700 block">
-            geral
+            saude
         </span>
 
         <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-950 leading-tight tracking-tight">
@@ -342,7 +344,7 @@
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">De acordo com levantamentos preliminares e comunicados oficiais acompanhados por DW (English), o caso ganha relevância expressiva no debate público. A dinâmica recente acelerou a tomada de decisões entre os órgãos competentes e gerou discussões estratégicas em diferentes esferas da sociedade.</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Pesquisadores envolvidos enfatizam que a metodologia e os dados observados fornecem subsídios fundamentais para novas investigações na área. A validação desses resultados por pares fortalece a confiança científica e abre precedentes para aplicações práticas que podem beneficiar tanto a comunidade acadêmica quanto a população em geral.</p>
             
         
             
@@ -416,67 +418,67 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">Recomendadas</span>
                     <h2 class="font-serif text-2xl font-bold text-neutral-950">Notícias Recentes</h2>
                 </div>
-                <a href="../../index.html?categoria=geral" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
-                    Ver mais em geral &rarr;
+                <a href="../../index.html?categoria=saude" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
+                    Ver mais em saude &rarr;
                 </a>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 
-                    <a href="../../noticia/abrir/618/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/103/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://sm.ign.com/t/ign_br/news/h/how-gta-6s/how-gta-6s-jason-and-lucia-have-evolved-since-2023-in-pictur_cjmt.1200.jpg"
-                                 alt="GTA 6: a evolução de Jason e Lucia desde 2023, em imagens"
+                            <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=800&amp;q=80"
+                                 alt="Estudo clínico comprova benefícios do sono regular e dieta balanceada no sistema imunológico"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            saude
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            GTA 6: a evolução de Jason e Lucia desde 2023, em imagens
+                            Estudo clínico comprova benefícios do sono regular e dieta balanceada no sistema imunológico
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Allana Aristides, Cade Onder</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">Equipe de Saúde Coletiva</span>
+                            <span>há 4 dias</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/620/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/89/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/10/01143937/770-podcast-contra-corrente.png"
-                                 alt="Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate"
+                            <img src="https://i0.statig.com.br/bancodeimagens/1r/sa/u8/1rsau88669bxv8p9y8w8csivb.jpg"
+                                 alt="Esposa de Lito expõe estado de saúde do marido após tratamento"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            saude
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate
+                            Esposa de Lito expõe estado de saúde do marido após tratamento
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">José Manuel Fernandes</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">Sandra Cotrim Ribeiro, Sandra Cotrim Ribeiro</span>
+                            <span>há 9 dias</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/143/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/108/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/c448/live/229088b0-b598-11f1-8ac1-4d5f189a56fb.jpg"
-                                 alt="Como justificar o voto e o que acontece se você não votar"
+                            <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&amp;q=80"
+                                 alt="Pesquisa revela regeneração acelerada de tecidos cartilaginosos com biopolímeros marinhos"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            saude
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Como justificar o voto e o que acontece se você não votar
+                            Pesquisa revela regeneração acelerada de tecidos cartilaginosos com biopolímeros marinhos
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">https://www.facebook.com/bbcnews</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">Dra. Gabriela Fontes</span>
+                            <span>há 9 dias</span>
                         </div>
                     </a>
                 

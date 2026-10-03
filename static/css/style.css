@@ -1,0 +1,58 @@
+/* Estilos limpos e minimalistas para o Explore */
+@layer utilities {
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
+/* Tipografia e fluidez */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animação contínua da tira azul de cotações, moedas, ações e fusos horários */
+.ticker-wrapper {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+}
+
+.ticker-track {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    animation: ticker-scroll 40s linear infinite;
+}
+
+.ticker-wrapper:hover .ticker-track {
+    animation-play-state: paused;
+}
+
+@keyframes ticker-scroll {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Escala suave em imagens de capa */
+.group:hover img {
+    filter: brightness(0.97);
+}
+
+/* Botão do Facebook */
+button.bg-facebook, a.bg-facebook {
+    background-color: #1877F2;
+}
+
+button.bg-facebook:hover, a.bg-facebook:hover {
+    background-color: #166fe5;
+}

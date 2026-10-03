@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="{{ url_for('news.sync_news') }}" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 

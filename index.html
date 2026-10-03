@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="/sincronizar" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 
@@ -294,28 +296,28 @@
         <!-- Matéria Principal em Destaque (Primeira Notícia) -->
         
         <section class="border-b border-neutral-200 pb-10">
-            <a href="./noticia/abrir/618/index.html" class="group block">
+            <a href="./noticia/abrir/1/index.html" class="group block">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     <!-- Capa Principal -->
                     <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
-                        <img src="https://sm.ign.com/t/ign_br/news/h/how-gta-6s/how-gta-6s-jason-and-lucia-have-evolved-since-2023-in-pictur_cjmt.1200.jpg"
-                             alt="GTA 6: a evolução de Jason e Lucia desde 2023, em imagens"
+                        <img src="https://cdn.flatout.com.br/wp-content/uploads/2026/10/Zero-a-300-021026.png"
+                             alt="Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!"
                              onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
                              class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
                     </div>
                     <!-- Conteúdo Principal -->
                     <div class="lg:col-span-5 space-y-3">
                         <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
-                            geral
+                            tecnologia
                         </span>
                         <h2 class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
-                            GTA 6: a evolução de Jason e Lucia desde 2023, em imagens
+                            Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!
                         </h2>
                         <p class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
-                            Três anos de evolução
+                            Bem vindo, FlatOuter! Aqui está nossa seleção diária das notícias mais importantes e relevantes do mundo automotivo para você ficar por dentro de tudo, sem perder tempo com rage-baits, discussões rasas e textos desalmados gerados por IA alucinadas. (Para comp…
                         </p>
                         <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
-                            <span>Allana Aristides, Cade Onder</span>
+                            <span>Dalmo Hernandes</span>
                             <span>•</span>
                             <span>há 1 dia</span>
                         </div>
@@ -327,12 +329,12 @@
         <!-- Grade de Notícias (Rolagem Infinita) -->
         <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
             
-                <article class="group flex flex-col justify-between" data-article-id="619">
-                    <a href="./noticia/abrir/619/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="2">
+                    <a href="./noticia/abrir/2/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://www.edivaldobrito.com.br/wp-content/uploads/2026/10/cd-projekt-red-lanca-hotfix-para-ajustar-iluminacao-do-witcher-3-remastered-no-pc.webp"
-                                 alt="CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC"
+                            <img src="https://medproc.congressoemfoco.com.br/artigoV7._PROC_AP5AC122900AT3ATX18.png"
+                                 alt="A eleição sob medida: a experiência de um mundo particular"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
@@ -344,84 +346,48 @@
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC
+                            A eleição sob medida: a experiência de um mundo particular
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Conheça o hotfix do Witcher 3 que traz ajustes na iluminação e corrige problemas de áudio no PC.
-O post CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC apareceu primeiro em Blog do Edivaldo - Informações e Notícias sobre Linu…
+                                Por Mauri Oliveira. Uma das maiores transformações da comunicação contemporânea acontece diante dos nossos olhos: a experiência de mundo está cada vez mais personalizada.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Edivaldo Brito</span>
+                        <span class="truncate max-w-[150px]">Redação</span>
                         <span>há 1 dia</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="620">
-                    <a href="./noticia/abrir/620/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="3">
+                    <a href="./noticia/abrir/3/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/10/01143937/770-podcast-contra-corrente.png"
-                                 alt="Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate"
+                            <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/31f9/live/d3605c90-bcbb-11f1-b3b2-8f83c947a78c.jpg"
+                                 alt="Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            negocios
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate
+                            Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Nove semanas depois tudo continua igual em Ceuta e Pedro Sanchez tem fechado os olhos a esse problema e tapado com problemas de corrupção ou a polémica de habitação de Maricarmen.
-                            </p>
-                        
-                    </a>
-
-                    <!-- Rodapé do Card: Autor e Data -->
-                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">José Manuel Fernandes</span>
-                        <span>há 1 dia</span>
-                    </div>
-                </article>
-            
-                <article class="group flex flex-col justify-between" data-article-id="143">
-                    <a href="./noticia/abrir/143/index.html" class="block space-y-3">
-                        <!-- Capa -->
-                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/c448/live/229088b0-b598-11f1-8ac1-4d5f189a56fb.jpg"
-                                 alt="Como justificar o voto e o que acontece se você não votar"
-                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        </div>
-
-                        <!-- Categoria -->
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
-                        </div>
-
-                        <!-- Título -->
-                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Como justificar o voto e o que acontece se você não votar
-                        </h3>
-
-                        <!-- Descrição -->
-                        
-                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Veja os prazos para justificar a ausência às urnas em 2026 e as consequências para quem não vota, não justifica e nem paga a multa.
+                                Jornais chineses — que são fortemente controlados pelo governo de Pequim — destacam que economia é determinante nas relações entre Brasil e China, independentemente de o presidente ser de esquerda ou direita.
                             </p>
                         
                     </a>
@@ -433,82 +399,47 @@ O post CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remas
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="144">
-                    <a href="./noticia/abrir/144/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="4">
+                    <a href="./noticia/abrir/4/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/10/02/1205527569-angelica.jpg"
-                                 alt="Arrasada, Angélica faz revelação sobre seu acidente de avião com filhos na morte de Lito Sousa"
+                            <img src="https://static.dw.com/image/74251824_6.jpg"
+                                 alt="Entenda a doença de Creutzfeldt-Jakob, que levou à morte de Lito Sousa"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            saude
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Arrasada, Angélica faz revelação sobre seu acidente de avião com filhos na morte de Lito Sousa
+                            Entenda a doença de Creutzfeldt-Jakob, que levou à morte de Lito Sousa
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Despedida e homenagem na TV! Angélica faz revelação sobre seu acidente de avião com filhos na morte de Lito Sousa; veja mais
+                                Doença fatal, que destrói progressivamente neurônios, afeta cerca de 1 a 2 pessoas por milhão ao ano. Entenda sintomas, formas de transmissão, diagnóstico e as tentativas de tratamento.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Contigo</span>
+                        <span class="truncate max-w-[150px]">Redação DW</span>
                         <span>há 1 dia</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="145">
-                    <a href="./noticia/abrir/145/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="5">
+                    <a href="./noticia/abrir/5/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://i.metroimg.com/jCzLMGB421wo-xNJxy4seVAoR4PonZKdAkrc7OVTyaM/rs:fill:1200:800:1/g:no/q:85/f:webp/plain/https://images.metroimg.com/2026/10/lito-sousa-1.jpg"
-                                 alt="Velório de Lito Sousa será dividido em dois para receber fãs e familiares"
-                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        </div>
-
-                        <!-- Categoria -->
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
-                        </div>
-
-                        <!-- Título -->
-                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Velório de Lito Sousa será dividido em dois para receber fãs e familiares
-                        </h3>
-
-                        <!-- Descrição -->
-                        
-                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                A informação da despedida do influenciador de aviação e youtuber foi divulgada no perfil oficial dele, na noite de quinta-feira (1º/10)
-                            </p>
-                        
-                    </a>
-
-                    <!-- Rodapé do Card: Autor e Data -->
-                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Fábia Oliveira</span>
-                        <span>há 1 dia</span>
-                    </div>
-                </article>
-            
-                <article class="group flex flex-col justify-between" data-article-id="214">
-                    <a href="./noticia/abrir/214/index.html" class="block space-y-3">
-                        <!-- Capa -->
-                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://img.odcdn.com.br/wp-content/uploads/2026/10/hero-tvs-oled-e-qled-1.jpg"
-                                 alt="Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon"
+                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2022/04/10163300/770-podcast-conferencia-de-imprensa.jpg"
+                                 alt="PSP avisa agentes: permanência ilegal no país não é crime"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
@@ -520,20 +451,90 @@ O post CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remas
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon
+                            PSP avisa agentes: permanência ilegal no país não é crime
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Se você está pensando em trocar a televisão por um modelo mais moderno, este é o momento certo. Reunimos duas ótimas opções de Smart TVs com tecnologia QLED disponíveis agora na Amazon — com recursos como Google TV, HDR, conectividade avançada e qualidade de …
+                                DN avança com alerta da Provedoria de Justiça que alerta para &#34;detenções desproporcionais&#34; por perceções erróneas sobre imigração. Folha de São Paulo conta como o debate presidencial foi cancelado.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Eduardo Nuvens</span>
+                        <span class="truncate max-w-[150px]">Beatriz Félix</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="6">
+                    <a href="./noticia/abrir/6/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/06/15153459/770-podcast-noticiario.png"
+                                 alt="As notícias das 6h"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            tecnologia
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            As notícias das 6h
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                As notícias na Rádio Observador. Aconteça o que acontecer.
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">Rádio Observador</span>
+                        <span>há 1 dia</span>
+                    </div>
+                </article>
+            
+                <article class="group flex flex-col justify-between" data-article-id="7">
+                    <a href="./noticia/abrir/7/index.html" class="block space-y-3">
+                        <!-- Capa -->
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://veja.abril.com.br/wp-content/uploads/2026/10/03.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1"
+                                 alt="‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+
+                        <!-- Categoria -->
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            entretenimento
+                        </div>
+
+                        <!-- Título -->
+                        <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
+                            ‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia
+                        </h3>
+
+                        <!-- Descrição -->
+                        
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                Marcos Luporini revela bastidores do processo de encontrar uma voz para a personagem Popó em adaptação para o cinema
+                            </p>
+                        
+                    </a>
+
+                    <!-- Rodapé do Card: Autor e Data -->
+                    <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
+                        <span class="truncate max-w-[150px]">Beatriz Haddad</span>
                         <span>há 1 dia</span>
                     </div>
                 </article>

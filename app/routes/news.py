@@ -44,12 +44,15 @@ def index():
     total_matching = query.count()
     articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).limit(initial_limit).all()
 
-    # Se a base estiver totalmente vazia no primeiro acesso, semeia matérias padrão
-    if not articles and not search_query and category == 'todas':
+    # Se a base estiver vazia ou com poucas matérias para a categoria selecionada, busca automaticamente
+    if not articles or total_matching < 4:
         news_svc = NewsService(current_app.config['NEWS_API_KEY'], current_app.config['NEWS_API_BASE_URL'])
-        news_svc.seed_initial_articles()
+        if category and category != 'todas':
+            news_svc.fetch_and_store_from_api(category=category)
+        else:
+            news_svc.seed_initial_articles()
         total_matching = query.count()
-        articles = NewsArticle.query.order_by(NewsArticle.published_at.desc()).limit(initial_limit).all()
+        articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).limit(initial_limit).all()
 
     categories = [
         ('todas', 'Todas'),
@@ -193,14 +196,32 @@ def open_by_id(article_id):
         resp.set_cookie(cookie_name, reader_id, max_age=max_age, httponly=True, samesite='Lax')
     return resp
 
-@news_bp.route('/sincronizar', methods=['POST'])
+@news_bp.route('/sincronizar', methods=['GET', 'POST'])
 def sync_news():
-    """Aciona sincronização manual com a NewsAPI buscando o máximo de matérias."""
-    category = request.form.get('category')
+    """
+    Aciona sincronização com a NewsAPI buscando o máximo de matérias.
+    Suporta GET e POST para eliminar definitivamente qualquer erro 405 Not Allowed.
+    Retorna JSON para chamadas assíncronas do frontend ou redireciona na navegação tradicional.
+    """
+    category = request.form.get('category') or request.args.get('categoria') or request.args.get('category')
     news_svc = NewsService(current_app.config['NEWS_API_KEY'], current_app.config['NEWS_API_BASE_URL'])
     if not category or category == 'todas':
         count, msg = news_svc.sync_all_categories()
     else:
         count, msg = news_svc.fetch_and_store_from_api(category=category)
+
+    # Resposta em JSON para chamadas fetch/AJAX
+    is_ajax = (
+        request.headers.get('X-Requested-With') == 'XMLHttpRequest' or
+        request.args.get('format') == 'json' or
+        'application/json' in request.headers.get('Accept', '')
+    )
+    if is_ajax:
+        return {
+            'status': 'success',
+            'count': count,
+            'message': msg
+        }
+
     flash(msg, 'success' if count > 0 else 'info')
-    return redirect(url_for('news.index'))
+    return redirect(url_for('news.index', categoria=category if category and category != 'todas' else None))

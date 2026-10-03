@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>&#34;O cerco ao Irão está a apertar-se&#34; — Explore</title>
+    <title>Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil — Explore</title>
 
     <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
     <meta property="og:site_name" content="Explore">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="&#34;O cerco ao Irão está a apertar-se&#34;">
-    <meta property="og:description" content="O major-general Arnaut Moreira considera que o Irão está a perder força no Golfo Pérsico e a ficar sem margem para negociar com os Estados Unidos.">
-    <meta property="og:image" content="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2023/01/06113240/770-podcast-o-dominio-da-guerra-1.jpg">
+    <meta property="og:title" content="Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil">
+    <meta property="og:description" content="Jornais chineses — que são fortemente controlados pelo governo de Pequim — destacam que economia é determinante nas relações entre Brasil e China, indep...">
+    <meta property="og:image" content="https://ichef.bbci.co.uk/news/1200/branded_portuguese/31f9/live/d3605c90-bcbb-11f1-b3b2-8f83c947a78c.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="http://localhost/noticia/o-cerco-ao-irao-esta-a-apertar-se-3">
+    <meta property="og:url" content="http://localhost/noticia/preferencia-por-lula-cautela-ao-criticar-flavio-como-a-china-e-a-imprensa-local-ve-a-eleicao-no-bras-3">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="&#34;O cerco ao Irão está a apertar-se&#34;">
-    <meta name="twitter:description" content="O major-general Arnaut Moreira considera que o Irão está a perder força no Golfo Pérsico e a ficar sem margem para negociar com os Estados Unidos.">
-    <meta name="twitter:image" content="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2023/01/06113240/770-podcast-o-dominio-da-guerra-1.jpg">
+    <meta name="twitter:title" content="Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil">
+    <meta name="twitter:description" content="Jornais chineses — que são fortemente controlados pelo governo de Pequim — destacam que economia é determinante nas relações entre Brasil e China, indep...">
+    <meta name="twitter:image" content="https://ichef.bbci.co.uk/news/1200/branded_portuguese/31f9/live/d3605c90-bcbb-11f1-b3b2-8f83c947a78c.jpg">
 
     <!-- Tipografia Editorial: Inter & Serif clássico -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="/sincronizar" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 
@@ -267,7 +269,7 @@
     <!-- Conteúdo do Blog -->
     <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
         
-<article class="max-w-3xl mx-auto space-y-8" data-article-slug="o-cerco-ao-irao-esta-a-apertar-se-3" data-article-id="3">
+<article class="max-w-3xl mx-auto space-y-8" data-article-slug="preferencia-por-lula-cautela-ao-criticar-flavio-como-a-china-e-a-imprensa-local-ve-a-eleicao-no-bras-3" data-article-id="3">
 
     <!-- Navegação de Retorno -->
     <div>
@@ -279,19 +281,19 @@
     <!-- Cabeçalho da Matéria: Categoria, Título, Autor, Data -->
     <header class="space-y-4">
         <span class="text-xs font-bold uppercase tracking-widest text-blue-700 block">
-            geral
+            negocios
         </span>
 
         <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-950 leading-tight tracking-tight">
-            &#34;O cerco ao Irão está a apertar-se&#34;
+            Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil
         </h1>
 
         <!-- Autor e Data -->
         <div class="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-neutral-200 text-xs text-neutral-500 font-medium">
             <div class="flex items-center space-x-2">
-                <span>Por <strong class="text-neutral-900">Maria João Simões</strong></span>
+                <span>Por <strong class="text-neutral-900">https://www.facebook.com/bbcnews</strong></span>
                 <span>•</span>
-                <span>02/10/2026 às 10:23</span>
+                <span>02/10/2026 às 13:41</span>
             </div>
 
             <!-- Botão de Compartilhar no Facebook (Topo) -->
@@ -314,8 +316,8 @@
 
     <!-- Capa Principal em Alta Resolução -->
     <div class="aspect-16/10 rounded-2xl overflow-hidden bg-neutral-100 shadow-sm">
-        <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2023/01/06113240/770-podcast-o-dominio-da-guerra-1.jpg"
-             alt="&#34;O cerco ao Irão está a apertar-se&#34;"
+        <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/31f9/live/d3605c90-bcbb-11f1-b3b2-8f83c947a78c.jpg"
+             alt="Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil"
              onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
              class="w-full h-full object-cover">
     </div>
@@ -324,7 +326,7 @@
     
         <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
             <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
-                O major-general Arnaut Moreira considera que o Irão está a perder força no Golfo Pérsico e a ficar sem margem para negociar com os Estados Unidos.
+                Jornais chineses — que são fortemente controlados pelo governo de Pequim — destacam que economia é determinante nas relações entre Brasil e China, independentemente de o presidente ser de esquerda ou direita.
             </p>
         </div>
     
@@ -338,11 +340,7 @@
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">Esta transcrição foi gerada automaticamente por Inteligência Artificial e pode conter erros ou imprecisões.Este é o Domínio da Guerra com o Major-General Arno Moreira. Bom dia.</p>
-            
-        
-            
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">De acordo com levantamentos preliminares e comunicados oficiais acompanhados por Observador.pt, o caso ganha relevância expressiva no debate público. A dinâmica recente acelerou a tomada de decisões entre os órgãos competentes e gerou discussões estratégicas em diferentes esferas da sociedade.</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Especialistas do setor destacam que avanços como o de &#39;Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil&#39; refletem um ciclo de rápida maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais.</p>
             
         
             
@@ -386,8 +384,8 @@
         <!-- Card Mockup Fiel ao Facebook -->
         <div class="max-w-md mx-auto bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition">
             <div class="aspect-16/9 w-full bg-neutral-100 overflow-hidden">
-                <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2023/01/06113240/770-podcast-o-dominio-da-guerra-1.jpg"
-                     alt="&#34;O cerco ao Irão está a apertar-se&#34;"
+                <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/31f9/live/d3605c90-bcbb-11f1-b3b2-8f83c947a78c.jpg"
+                     alt="Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil"
                      class="w-full h-full object-cover">
             </div>
             <div class="p-3 bg-[#F0F2F5]/70 space-y-1">
@@ -395,10 +393,10 @@
                     explore • notícias
                 </div>
                 <div class="font-bold text-neutral-900 text-xs sm:text-sm leading-snug line-clamp-2">
-                    &#34;O cerco ao Irão está a apertar-se&#34;
+                    Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil
                 </div>
                 <div class="text-neutral-600 text-xs line-clamp-1 leading-normal">
-                    O major-general Arnaut Moreira considera que o Irão está a perder força no Golfo Pérsico e a ficar sem margem para negociar com os Estados Unidos.
+                    Jornais chineses — que são fortemente controlados pelo governo de Pequim — destacam que economia é determinante nas relações entre Brasil e China, indep...
                 </div>
             </div>
         </div>
@@ -416,67 +414,67 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">Recomendadas</span>
                     <h2 class="font-serif text-2xl font-bold text-neutral-950">Notícias Recentes</h2>
                 </div>
-                <a href="../../index.html?categoria=geral" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
-                    Ver mais em geral &rarr;
+                <a href="../../index.html?categoria=negocios" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
+                    Ver mais em negocios &rarr;
                 </a>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 
-                    <a href="../../noticia/abrir/618/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/101/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://sm.ign.com/t/ign_br/news/h/how-gta-6s/how-gta-6s-jason-and-lucia-have-evolved-since-2023-in-pictur_cjmt.1200.jpg"
-                                 alt="GTA 6: a evolução de Jason e Lucia desde 2023, em imagens"
+                            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&amp;q=80"
+                                 alt="Bancos centrais ampliam testes de liquidação digital com bancos de dados relacionais distribuídos"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            negocios
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            GTA 6: a evolução de Jason e Lucia desde 2023, em imagens
+                            Bancos centrais ampliam testes de liquidação digital com bancos de dados relacionais distribuídos
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Allana Aristides, Cade Onder</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">Carlos Albuquerque</span>
+                            <span>há 2 dias</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/620/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/107/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/10/01143937/770-podcast-contra-corrente.png"
-                                 alt="Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate"
+                            <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&amp;q=80"
+                                 alt="Comércio exterior brasileiro bate recorde com expansão de produtos manufaturados de alto valor"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
+                            negocios
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Ceuta, Maticarmen e o populismo perigoso de Sanchez — Debate
+                            Comércio exterior brasileiro bate recorde com expansão de produtos manufaturados de alto valor
+                        </h3>
+                        <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
+                            <span class="truncate max-w-[120px]">Renata Carvalho</span>
+                            <span>há 8 dias</span>
+                        </div>
+                    </a>
+                
+                    <a href="../../noticia/abrir/75/index.html" class="group block space-y-3">
+                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
+                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2025/12/16133246/770-podcast-contra-corrente-zmf-hm-hg.jpg"
+                                 alt="Portugal, o tráfico de escravo e os pedidos de indemnizações"
+                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
+                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        </div>
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                            negocios
+                        </div>
+                        <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
+                            Portugal, o tráfico de escravo e os pedidos de indemnizações
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
                             <span class="truncate max-w-[120px]">José Manuel Fernandes</span>
-                            <span>há 1 dia</span>
-                        </div>
-                    </a>
-                
-                    <a href="../../noticia/abrir/143/index.html" class="group block space-y-3">
-                        <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/c448/live/229088b0-b598-11f1-8ac1-4d5f189a56fb.jpg"
-                                 alt="Como justificar o voto e o que acontece se você não votar"
-                                 onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
-                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                        </div>
-                        <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            geral
-                        </div>
-                        <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Como justificar o voto e o que acontece se você não votar
-                        </h3>
-                        <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">https://www.facebook.com/bbcnews</span>
-                            <span>há 1 dia</span>
+                            <span>há 8 dias</span>
                         </div>
                     </a>
                 
@@ -487,8 +485,8 @@
     <!-- Fonte Original -->
     
         <div class="pt-8 text-center text-xs text-neutral-400">
-            <a href="https://observador.pt/programas/o-dominio-da-guerra/o-cerco-ao-irao-esta-a-apertar-se/" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
-                Ver fonte original em Observador.pt
+            <a href="https://www.bbc.com/portuguese/articles/c693e0lddp4po" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
+                Ver fonte original em BBC News
             </a>
         </div>
     

@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie — Explore</title>
+    <title>‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia — Explore</title>
 
     <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
     <meta property="og:site_name" content="Explore">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie">
-    <meta property="og:description" content="Lula negou que o governo dele fosse de esquerda">
-    <meta property="og:image" content="https://www.infomoney.com.br/wp-content/uploads/2026/10/2026-09-25T224849Z_695027607_RC2LQNARBRBA_RTRMADP_3_BRAZIL-ELECTION-LULA.jpg">
+    <meta property="og:title" content="‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia">
+    <meta property="og:description" content="Marcos Luporini revela bastidores do processo de encontrar uma voz para a personagem Popó em adaptação para o cinema">
+    <meta property="og:image" content="https://veja.abril.com.br/wp-content/uploads/2026/10/03.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="http://localhost/noticia/lula-diz-que-declarou-a-empresarios-voces-nao-tem-escolha-ou-sou-eu-ou-e-barbarie-7">
+    <meta property="og:url" content="http://localhost/noticia/proposta-ousada-criador-da-galinha-pintadinha-fala-a-veja-sobre-primeiro-filme-da-franquia-7">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie">
-    <meta name="twitter:description" content="Lula negou que o governo dele fosse de esquerda">
-    <meta name="twitter:image" content="https://www.infomoney.com.br/wp-content/uploads/2026/10/2026-09-25T224849Z_695027607_RC2LQNARBRBA_RTRMADP_3_BRAZIL-ELECTION-LULA.jpg">
+    <meta name="twitter:title" content="‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia">
+    <meta name="twitter:description" content="Marcos Luporini revela bastidores do processo de encontrar uma voz para a personagem Popó em adaptação para o cinema">
+    <meta name="twitter:image" content="https://veja.abril.com.br/wp-content/uploads/2026/10/03.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1">
 
     <!-- Tipografia Editorial: Inter & Serif clássico -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="/sincronizar" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 
@@ -267,7 +269,7 @@
     <!-- Conteúdo do Blog -->
     <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
         
-<article class="max-w-3xl mx-auto space-y-8" data-article-slug="lula-diz-que-declarou-a-empresarios-voces-nao-tem-escolha-ou-sou-eu-ou-e-barbarie-7" data-article-id="7">
+<article class="max-w-3xl mx-auto space-y-8" data-article-slug="proposta-ousada-criador-da-galinha-pintadinha-fala-a-veja-sobre-primeiro-filme-da-franquia-7" data-article-id="7">
 
     <!-- Navegação de Retorno -->
     <div>
@@ -279,19 +281,19 @@
     <!-- Cabeçalho da Matéria: Categoria, Título, Autor, Data -->
     <header class="space-y-4">
         <span class="text-xs font-bold uppercase tracking-widest text-blue-700 block">
-            tecnologia
+            entretenimento
         </span>
 
         <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-950 leading-tight tracking-tight">
-            Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie
+            ‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia
         </h1>
 
         <!-- Autor e Data -->
         <div class="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-neutral-200 text-xs text-neutral-500 font-medium">
             <div class="flex items-center space-x-2">
-                <span>Por <strong class="text-neutral-900">Estadão Conteúdo</strong></span>
+                <span>Por <strong class="text-neutral-900">Beatriz Haddad</strong></span>
                 <span>•</span>
-                <span>02/10/2026 às 09:48</span>
+                <span>01/10/2026 às 20:46</span>
             </div>
 
             <!-- Botão de Compartilhar no Facebook (Topo) -->
@@ -314,8 +316,8 @@
 
     <!-- Capa Principal em Alta Resolução -->
     <div class="aspect-16/10 rounded-2xl overflow-hidden bg-neutral-100 shadow-sm">
-        <img src="https://www.infomoney.com.br/wp-content/uploads/2026/10/2026-09-25T224849Z_695027607_RC2LQNARBRBA_RTRMADP_3_BRAZIL-ELECTION-LULA.jpg"
-             alt="Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie"
+        <img src="https://veja.abril.com.br/wp-content/uploads/2026/10/03.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1"
+             alt="‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia"
              onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
              class="w-full h-full object-cover">
     </div>
@@ -324,7 +326,7 @@
     
         <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
             <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
-                Lula negou que o governo dele fosse de esquerda
+                Marcos Luporini revela bastidores do processo de encontrar uma voz para a personagem Popó em adaptação para o cinema
             </p>
         </div>
     
@@ -338,11 +340,11 @@
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">O InfoMoney preza a qualidade da informação e atesta a apuração de todo o conteúdo produzido por sua</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Fique por dentro das eleições, pesquisas e análises com Veja Digital por apenas R$ 1,99/mês. ! Fique por dentro das eleições, pesquisas e análises com Veja Digital …</p>
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">Especialistas do setor destacam que avanços como o de &#39;Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie&#39; refletem um ciclo de rápida maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais.</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Especialistas do setor destacam que avanços como o de &#39;‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia&#39; refletem um ciclo de rápida maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais.</p>
             
         
             
@@ -386,8 +388,8 @@
         <!-- Card Mockup Fiel ao Facebook -->
         <div class="max-w-md mx-auto bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition">
             <div class="aspect-16/9 w-full bg-neutral-100 overflow-hidden">
-                <img src="https://www.infomoney.com.br/wp-content/uploads/2026/10/2026-09-25T224849Z_695027607_RC2LQNARBRBA_RTRMADP_3_BRAZIL-ELECTION-LULA.jpg"
-                     alt="Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie"
+                <img src="https://veja.abril.com.br/wp-content/uploads/2026/10/03.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1"
+                     alt="‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia"
                      class="w-full h-full object-cover">
             </div>
             <div class="p-3 bg-[#F0F2F5]/70 space-y-1">
@@ -395,10 +397,10 @@
                     explore • notícias
                 </div>
                 <div class="font-bold text-neutral-900 text-xs sm:text-sm leading-snug line-clamp-2">
-                    Lula diz que declarou a empresários: Vocês não têm escolha, ou sou eu ou é barbárie
+                    ‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia
                 </div>
                 <div class="text-neutral-600 text-xs line-clamp-1 leading-normal">
-                    Lula negou que o governo dele fosse de esquerda
+                    Marcos Luporini revela bastidores do processo de encontrar uma voz para a personagem Popó em adaptação para o cinema
                 </div>
             </div>
         </div>
@@ -416,67 +418,67 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">Recomendadas</span>
                     <h2 class="font-serif text-2xl font-bold text-neutral-950">Notícias Recentes</h2>
                 </div>
-                <a href="../../index.html?categoria=tecnologia" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
-                    Ver mais em tecnologia &rarr;
+                <a href="../../index.html?categoria=entretenimento" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
+                    Ver mais em entretenimento &rarr;
                 </a>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 
-                    <a href="../../noticia/abrir/619/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/26/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://www.edivaldobrito.com.br/wp-content/uploads/2026/10/cd-projekt-red-lanca-hotfix-para-ajustar-iluminacao-do-witcher-3-remastered-no-pc.webp"
-                                 alt="CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC"
+                            <img src="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/09/30/1639532700-cidinha-moraes.jpg"
+                                 alt="Cidinha Moraes, cantora cofundadora da banda Vida Reluz, morre aos 60 anos"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            tecnologia
+                            entretenimento
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC
+                            Cidinha Moraes, cantora cofundadora da banda Vida Reluz, morre aos 60 anos
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Edivaldo Brito</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">Contigo</span>
+                            <span>há 3 dias</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/214/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/104/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://img.odcdn.com.br/wp-content/uploads/2026/10/hero-tvs-oled-e-qled-1.jpg"
-                                 alt="Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon"
+                            <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&amp;q=80"
+                                 alt="Festival internacional de cinema independente premia obras que discutem memória e tecnologia"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            tecnologia
+                            entretenimento
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon
+                            Festival internacional de cinema independente premia obras que discutem memória e tecnologia
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Eduardo Nuvens</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">Beatriz Lima</span>
+                            <span>há 4 dias</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/32/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/56/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://www.infomoney.com.br/wp-content/uploads/2025/11/Captura-de-tela-2025-11-06-104546.png"
-                                 alt="Axia (AXIA3) fará resgate de R$ 2,54 bilhões em ações preferenciais"
+                            <img src="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/09/27/48148256-htl7fduxsaa-oyg.jpg"
+                                 alt="NFL Rio Game: Baltimore Ravens x Dallas Cowboys: Onde Assistir Ao Vivo, Horário e História no Maracanã"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            tecnologia
+                            entretenimento
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Axia (AXIA3) fará resgate de R$ 2,54 bilhões em ações preferenciais
+                            NFL Rio Game: Baltimore Ravens x Dallas Cowboys: Onde Assistir Ao Vivo, Horário e História no Maracanã
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Felipe Moreira</span>
-                            <span>há 1 dia</span>
+                            <span class="truncate max-w-[120px]">RTI Esporte</span>
+                            <span>há 5 dias</span>
                         </div>
                     </a>
                 
@@ -487,8 +489,8 @@
     <!-- Fonte Original -->
     
         <div class="pt-8 text-center text-xs text-neutral-400">
-            <a href="https://www.infomoney.com.br/politica/lula-diz-que-declarou-a-empresarios-voces-nao-tem-escolha-ou-sou-eu-ou-e-barbarie/" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
-                Ver fonte original em InfoMoney
+            <a href="https://veja.abril.com.br/cultura/proposta-ousada-criador-da-galinha-pintadinha-fala-a-veja-sobre-primeiro-filme-da-franquia/" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
+                Ver fonte original em Abril.com.br
             </a>
         </div>
     

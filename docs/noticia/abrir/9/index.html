@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lula diz que pode aplicar reciprocidade comercial aos EUA — Explore</title>
+    <title>As notícias das 16h — Explore</title>
 
     <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
     <meta property="og:site_name" content="Explore">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Lula diz que pode aplicar reciprocidade comercial aos EUA">
-    <meta property="og:description" content="Petista disse que ainda não colocou o mecanismo em prática, mas indicou que poderá recorrer à medida">
-    <meta property="og:image" content="https://www.infomoney.com.br/wp-content/uploads/2025/10/trump-lula-malasia-brasil-eua.jpg">
+    <meta property="og:title" content="As notícias das 16h">
+    <meta property="og:description" content="Ex-Presidente da República deixa apelo numa altura em que diz que a equipa das quinas atravessa um &#34;momento crucial&#34;.">
+    <meta property="og:image" content="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/06/15153459/770-podcast-noticiario.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="http://localhost/noticia/lula-diz-que-pode-aplicar-reciprocidade-comercial-aos-eua-9">
+    <meta property="og:url" content="http://localhost/noticia/as-noticias-das-16h-9">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Lula diz que pode aplicar reciprocidade comercial aos EUA">
-    <meta name="twitter:description" content="Petista disse que ainda não colocou o mecanismo em prática, mas indicou que poderá recorrer à medida">
-    <meta name="twitter:image" content="https://www.infomoney.com.br/wp-content/uploads/2025/10/trump-lula-malasia-brasil-eua.jpg">
+    <meta name="twitter:title" content="As notícias das 16h">
+    <meta name="twitter:description" content="Ex-Presidente da República deixa apelo numa altura em que diz que a equipa das quinas atravessa um &#34;momento crucial&#34;.">
+    <meta name="twitter:image" content="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/06/15153459/770-podcast-noticiario.png">
 
     <!-- Tipografia Editorial: Inter & Serif clássico -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="/sincronizar" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 
@@ -267,7 +269,7 @@
     <!-- Conteúdo do Blog -->
     <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
         
-<article class="max-w-3xl mx-auto space-y-8" data-article-slug="lula-diz-que-pode-aplicar-reciprocidade-comercial-aos-eua-9" data-article-id="9">
+<article class="max-w-3xl mx-auto space-y-8" data-article-slug="as-noticias-das-16h-9" data-article-id="9">
 
     <!-- Navegação de Retorno -->
     <div>
@@ -283,15 +285,15 @@
         </span>
 
         <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-950 leading-tight tracking-tight">
-            Lula diz que pode aplicar reciprocidade comercial aos EUA
+            As notícias das 16h
         </h1>
 
         <!-- Autor e Data -->
         <div class="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-neutral-200 text-xs text-neutral-500 font-medium">
             <div class="flex items-center space-x-2">
-                <span>Por <strong class="text-neutral-900">Estadão Conteúdo</strong></span>
+                <span>Por <strong class="text-neutral-900">Rádio Observador</strong></span>
                 <span>•</span>
-                <span>02/10/2026 às 09:41</span>
+                <span>01/10/2026 às 15:15</span>
             </div>
 
             <!-- Botão de Compartilhar no Facebook (Topo) -->
@@ -314,8 +316,8 @@
 
     <!-- Capa Principal em Alta Resolução -->
     <div class="aspect-16/10 rounded-2xl overflow-hidden bg-neutral-100 shadow-sm">
-        <img src="https://www.infomoney.com.br/wp-content/uploads/2025/10/trump-lula-malasia-brasil-eua.jpg"
-             alt="Lula diz que pode aplicar reciprocidade comercial aos EUA"
+        <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/06/15153459/770-podcast-noticiario.png"
+             alt="As notícias das 16h"
              onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
              class="w-full h-full object-cover">
     </div>
@@ -324,7 +326,7 @@
     
         <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
             <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
-                Petista disse que ainda não colocou o mecanismo em prática, mas indicou que poderá recorrer à medida
+                Ex-Presidente da República deixa apelo numa altura em que diz que a equipa das quinas atravessa um &#34;momento crucial&#34;. Ainda, Governo anuncia aumento de 50 euros no Complemento Solidário para Idosos.
             </p>
         </div>
     
@@ -338,11 +340,11 @@
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">O InfoMoney preza a qualidade da informação e atesta a apuração de todo o conteúdo produzido por sua</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Esta transcrição foi gerada automaticamente por Inteligência Artificial e pode conter erros ou imprecisões.As notícias. Miguel, Marcelo Rebelo de Sousa pede união em torno da Seleção Nacional.</p>
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">Especialistas do setor destacam que avanços como o de &#39;Lula diz que pode aplicar reciprocidade comercial aos EUA&#39; refletem um ciclo de rápida maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais.</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Especialistas do setor destacam que avanços como o de &#39;As notícias das 16h&#39; refletem um ciclo de rápida maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais.</p>
             
         
             
@@ -386,8 +388,8 @@
         <!-- Card Mockup Fiel ao Facebook -->
         <div class="max-w-md mx-auto bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition">
             <div class="aspect-16/9 w-full bg-neutral-100 overflow-hidden">
-                <img src="https://www.infomoney.com.br/wp-content/uploads/2025/10/trump-lula-malasia-brasil-eua.jpg"
-                     alt="Lula diz que pode aplicar reciprocidade comercial aos EUA"
+                <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/06/15153459/770-podcast-noticiario.png"
+                     alt="As notícias das 16h"
                      class="w-full h-full object-cover">
             </div>
             <div class="p-3 bg-[#F0F2F5]/70 space-y-1">
@@ -395,10 +397,10 @@
                     explore • notícias
                 </div>
                 <div class="font-bold text-neutral-900 text-xs sm:text-sm leading-snug line-clamp-2">
-                    Lula diz que pode aplicar reciprocidade comercial aos EUA
+                    As notícias das 16h
                 </div>
                 <div class="text-neutral-600 text-xs line-clamp-1 leading-normal">
-                    Petista disse que ainda não colocou o mecanismo em prática, mas indicou que poderá recorrer à medida
+                    Ex-Presidente da República deixa apelo numa altura em que diz que a equipa das quinas atravessa um &#34;momento crucial&#34;.
                 </div>
             </div>
         </div>
@@ -423,10 +425,10 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 
-                    <a href="../../noticia/abrir/619/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/1/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://www.edivaldobrito.com.br/wp-content/uploads/2026/10/cd-projekt-red-lanca-hotfix-para-ajustar-iluminacao-do-witcher-3-remastered-no-pc.webp"
-                                 alt="CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC"
+                            <img src="https://cdn.flatout.com.br/wp-content/uploads/2026/10/Zero-a-300-021026.png"
+                                 alt="Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
@@ -434,18 +436,18 @@
                             tecnologia
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            CD Projekt Red lança hotfix para ajustar iluminação do Witcher 3 Remastered no PC
+                            Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Edivaldo Brito</span>
+                            <span class="truncate max-w-[120px]">Dalmo Hernandes</span>
                             <span>há 1 dia</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/214/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/2/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://img.odcdn.com.br/wp-content/uploads/2026/10/hero-tvs-oled-e-qled-1.jpg"
-                                 alt="Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon"
+                            <img src="https://medproc.congressoemfoco.com.br/artigoV7._PROC_AP5AC122900AT3ATX18.png"
+                                 alt="A eleição sob medida: a experiência de um mundo particular"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
@@ -453,18 +455,18 @@
                             tecnologia
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Hora de renovar a sala: TVs QLED com tecnologia de ponta estão em oferta na Amazon
+                            A eleição sob medida: a experiência de um mundo particular
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Eduardo Nuvens</span>
+                            <span class="truncate max-w-[120px]">Redação</span>
                             <span>há 1 dia</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/32/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/5/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://www.infomoney.com.br/wp-content/uploads/2025/11/Captura-de-tela-2025-11-06-104546.png"
-                                 alt="Axia (AXIA3) fará resgate de R$ 2,54 bilhões em ações preferenciais"
+                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2022/04/10163300/770-podcast-conferencia-de-imprensa.jpg"
+                                 alt="PSP avisa agentes: permanência ilegal no país não é crime"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
@@ -472,10 +474,10 @@
                             tecnologia
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Axia (AXIA3) fará resgate de R$ 2,54 bilhões em ações preferenciais
+                            PSP avisa agentes: permanência ilegal no país não é crime
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Felipe Moreira</span>
+                            <span class="truncate max-w-[120px]">Beatriz Félix</span>
                             <span>há 1 dia</span>
                         </div>
                     </a>
@@ -487,8 +489,8 @@
     <!-- Fonte Original -->
     
         <div class="pt-8 text-center text-xs text-neutral-400">
-            <a href="https://www.infomoney.com.br/politica/lula-diz-que-pode-aplicar-reciprocidade-comercial-aos-eua/" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
-                Ver fonte original em InfoMoney
+            <a href="https://observador.pt/programas/noticiario/as-noticias-das-16h-2375/" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
+                Ver fonte original em Observador.pt
             </a>
         </div>
     

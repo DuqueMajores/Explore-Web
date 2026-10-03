@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta — Explore</title>
+    <title>Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump — Explore</title>
 
     <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
     <meta property="og:site_name" content="Explore">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta">
-    <meta property="og:description" content="Índices futuros dos EUA avançam com forte baixa do petróleo">
-    <meta property="og:image" content="https://www.infomoney.com.br/wp-content/uploads/2026/10/Ibovespa-ao-vivo-7.webp">
+    <meta property="og:title" content="Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump">
+    <meta property="og:description" content="Nos últimos seis anos, a pandemia, duas guerras e as tarifas dos EUA abalaram o comércio ...">
+    <meta property="og:image" content="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/09/29/1668791119-78106124354.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:url" content="http://localhost/noticia/ibovespa-hoje-ao-vivo-confira-o-que-movimenta-bolsa-dolar-e-juros-nesta-sexta-30">
+    <meta property="og:url" content="http://localhost/noticia/comercio-global-resiste-a-pandemia-guerras-no-ira-na-ucrania-e-a-tarifaco-de-trump-30">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta">
-    <meta name="twitter:description" content="Índices futuros dos EUA avançam com forte baixa do petróleo">
-    <meta name="twitter:image" content="https://www.infomoney.com.br/wp-content/uploads/2026/10/Ibovespa-ao-vivo-7.webp">
+    <meta name="twitter:title" content="Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump">
+    <meta name="twitter:description" content="Nos últimos seis anos, a pandemia, duas guerras e as tarifas dos EUA abalaram o comércio ...">
+    <meta name="twitter:image" content="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/09/29/1668791119-78106124354.jpg">
 
     <!-- Tipografia Editorial: Inter & Serif clássico -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,14 +226,16 @@
                     <span>Explore</span>
                 </a>
 
-                <!-- Ações Rápidas: Atualizar Notícias -->
+                <!-- Ações Rápidas: Atualizar Notícias (Compatível com Flask e GitHub Pages) -->
                 <div class="flex items-center space-x-2">
-                    <form action="/sincronizar" method="POST" class="inline">
-                        <button type="submit" title="Atualizar notícias em tempo real" class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs">
-                            <i class="fa-solid fa-arrows-rotate text-[11px]"></i>
-                            <span>Atualizar</span>
-                        </button>
-                    </form>
+                    <button type="button"
+                            id="refreshNewsBtn"
+                            onclick="handleManualRefresh(event)"
+                            title="Atualizar notícias em tempo real"
+                            class="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-full border border-neutral-200 hover:border-neutral-900 text-xs font-semibold text-neutral-700 hover:text-neutral-950 transition bg-white shadow-2xs active:scale-95 cursor-pointer">
+                        <i id="refreshNewsIcon" class="fa-solid fa-arrows-rotate text-[11px] transition-transform"></i>
+                        <span id="refreshNewsText">Atualizar</span>
+                    </button>
                 </div>
             </div>
 
@@ -267,7 +269,7 @@
     <!-- Conteúdo do Blog -->
     <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
         
-<article class="max-w-3xl mx-auto space-y-8" data-article-slug="ibovespa-hoje-ao-vivo-confira-o-que-movimenta-bolsa-dolar-e-juros-nesta-sexta-30" data-article-id="30">
+<article class="max-w-3xl mx-auto space-y-8" data-article-slug="comercio-global-resiste-a-pandemia-guerras-no-ira-na-ucrania-e-a-tarifaco-de-trump-30" data-article-id="30">
 
     <!-- Navegação de Retorno -->
     <div>
@@ -279,19 +281,19 @@
     <!-- Cabeçalho da Matéria: Categoria, Título, Autor, Data -->
     <header class="space-y-4">
         <span class="text-xs font-bold uppercase tracking-widest text-blue-700 block">
-            negocios
+            tecnologia
         </span>
 
         <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-950 leading-tight tracking-tight">
-            Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta
+            Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump
         </h1>
 
         <!-- Autor e Data -->
         <div class="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-neutral-200 text-xs text-neutral-500 font-medium">
             <div class="flex items-center space-x-2">
-                <span>Por <strong class="text-neutral-900">Felipe Alves</strong></span>
+                <span>Por <strong class="text-neutral-900">Deutsche Welle</strong></span>
                 <span>•</span>
-                <span>02/10/2026 às 10:58</span>
+                <span>29/09/2026 às 17:52</span>
             </div>
 
             <!-- Botão de Compartilhar no Facebook (Topo) -->
@@ -314,8 +316,8 @@
 
     <!-- Capa Principal em Alta Resolução -->
     <div class="aspect-16/10 rounded-2xl overflow-hidden bg-neutral-100 shadow-sm">
-        <img src="https://www.infomoney.com.br/wp-content/uploads/2026/10/Ibovespa-ao-vivo-7.webp"
-             alt="Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta"
+        <img src="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/09/29/1668791119-78106124354.jpg"
+             alt="Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump"
              onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
              class="w-full h-full object-cover">
     </div>
@@ -324,7 +326,7 @@
     
         <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
             <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
-                Índices futuros dos EUA avançam com forte baixa do petróleo
+                Nos últimos seis anos, a pandemia, duas guerras e as tarifas dos EUA abalaram o comércio ...
             </p>
         </div>
     
@@ -338,11 +340,11 @@
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">O InfoMoney preza a qualidade da informação e atesta a apuração de todo o conteúdo produzido por sua</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">ResumoApesar dos choques causados pela pandemia, guerras e tarifas dos EUA que enfraquecem as regras da OMC, o comércio global segue resiliente, impulsionado pela demanda por inteligência artificial.…</p>
             
         
             
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">No âmbito econômico, a repercussão de &#39;Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta&#39; mobilizou mesas de operação e consultorias financeiras. O movimento evidencia o reposicionamento estratégico dos principais agentes diante das oscilações da taxa de juros e da volatilidade cambial, consolidando operações voltadas para liquidez e proteção patrimonial.</p>
+                <p class="text-neutral-800 text-[18px] leading-[1.8]">Especialistas do setor destacam que avanços como o de &#39;Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump&#39; refletem um ciclo de rápida maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais.</p>
             
         
             
@@ -386,8 +388,8 @@
         <!-- Card Mockup Fiel ao Facebook -->
         <div class="max-w-md mx-auto bg-white border border-neutral-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition">
             <div class="aspect-16/9 w-full bg-neutral-100 overflow-hidden">
-                <img src="https://www.infomoney.com.br/wp-content/uploads/2026/10/Ibovespa-ao-vivo-7.webp"
-                     alt="Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta"
+                <img src="https://p2.trrsf.com/image/fget/cf/1200/630/middle/images.terra.com/2026/09/29/1668791119-78106124354.jpg"
+                     alt="Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump"
                      class="w-full h-full object-cover">
             </div>
             <div class="p-3 bg-[#F0F2F5]/70 space-y-1">
@@ -395,10 +397,10 @@
                     explore • notícias
                 </div>
                 <div class="font-bold text-neutral-900 text-xs sm:text-sm leading-snug line-clamp-2">
-                    Ibovespa Hoje Ao Vivo: Confira o que movimenta Bolsa, Dólar e Juros nesta sexta
+                    Comércio global resiste a pandemia, guerras no Irã, na Ucrânia e a tarifaço de Trump
                 </div>
                 <div class="text-neutral-600 text-xs line-clamp-1 leading-normal">
-                    Índices futuros dos EUA avançam com forte baixa do petróleo
+                    Nos últimos seis anos, a pandemia, duas guerras e as tarifas dos EUA abalaram o comércio ...
                 </div>
             </div>
         </div>
@@ -416,44 +418,44 @@
                     <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700 block">Recomendadas</span>
                     <h2 class="font-serif text-2xl font-bold text-neutral-950">Notícias Recentes</h2>
                 </div>
-                <a href="../../index.html?categoria=negocios" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
-                    Ver mais em negocios &rarr;
+                <a href="../../index.html?categoria=tecnologia" class="text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition">
+                    Ver mais em tecnologia &rarr;
                 </a>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 
-                    <a href="../../noticia/abrir/27/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/1/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://claudia.abril.com.br/wp-content/uploads/2026/10/capa-adri.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1"
-                                 alt="‘Quem Ama Cuida’ (02/10): revelação sobre assassinato e plano contra noivado movimentam o capítulo"
+                            <img src="https://cdn.flatout.com.br/wp-content/uploads/2026/10/Zero-a-300-021026.png"
+                                 alt="Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            negocios
+                            tecnologia
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            ‘Quem Ama Cuida’ (02/10): revelação sobre assassinato e plano contra noivado movimentam o capítulo
+                            Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Redação CLAUDIA</span>
+                            <span class="truncate max-w-[120px]">Dalmo Hernandes</span>
                             <span>há 1 dia</span>
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/528/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/2/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://s2-valor.glbimg.com/VYaLdDHx50wQgZcn9XLQQLMKeOc=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_63b422c2caee4269b8b34177e8876b93/internal_photos/bs/2026/9/p/DEf1YxR72N1coyDZALlw/gettyimages-1391103263.jpg"
-                                 alt="Novas modalidades de golpes cibernéticos desafiam gestão de riscos das médias empresas"
+                            <img src="https://medproc.congressoemfoco.com.br/artigoV7._PROC_AP5AC122900AT3ATX18.png"
+                                 alt="A eleição sob medida: a experiência de um mundo particular"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            negocios
+                            tecnologia
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Novas modalidades de golpes cibernéticos desafiam gestão de riscos das médias empresas
+                            A eleição sob medida: a experiência de um mundo particular
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
                             <span class="truncate max-w-[120px]">Redação</span>
@@ -461,22 +463,22 @@
                         </div>
                     </a>
                 
-                    <a href="../../noticia/abrir/34/index.html" class="group block space-y-3">
+                    <a href="../../noticia/abrir/5/index.html" class="group block space-y-3">
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&amp;q=80"
-                                 alt="Bancos centrais ampliam testes de liquidação digital com bancos de dados relacionais distribuídos"
+                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2022/04/10163300/770-podcast-conferencia-de-imprensa.jpg"
+                                 alt="PSP avisa agentes: permanência ilegal no país não é crime"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            negocios
+                            tecnologia
                         </div>
                         <h3 class="font-serif text-base font-semibold text-neutral-900 group-hover:text-blue-700 transition line-clamp-2 leading-snug">
-                            Bancos centrais ampliam testes de liquidação digital com bancos de dados relacionais distribuídos
+                            PSP avisa agentes: permanência ilegal no país não é crime
                         </h3>
                         <div class="text-[11px] text-neutral-400 flex items-center justify-between pt-1">
-                            <span class="truncate max-w-[120px]">Carlos Albuquerque</span>
-                            <span>há 2 dias</span>
+                            <span class="truncate max-w-[120px]">Beatriz Félix</span>
+                            <span>há 1 dia</span>
                         </div>
                     </a>
                 
@@ -487,8 +489,8 @@
     <!-- Fonte Original -->
     
         <div class="pt-8 text-center text-xs text-neutral-400">
-            <a href="https://www.infomoney.com.br/mercados/ibovespa-hoje-bolsa-de-valores-ao-vivo-02102026/" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
-                Ver fonte original em InfoMoney
+            <a href="https://www.terra.com.br/economia/comercio-global-resiste-a-pandemia-guerras-no-ira-na-ucrania-e-a-tarifaco-de-trump,266ba1f0368f64ce1750e853246e1fa9p72wgue6.html" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-700 underline">
+                Ver fonte original em Terra.com.br
             </a>
         </div>
     
