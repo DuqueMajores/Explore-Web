@@ -14,8 +14,6 @@ class BackupService:
     @staticmethod
     def get_db_path() -> str:
         """Retorna o caminho absoluto do arquivo SQLite atual."""
-        if 'SQLITE_PATH' in current_app.config and current_app.config['SQLITE_PATH']:
-            return current_app.config['SQLITE_PATH']
         uri = current_app.config.get('SQLALCHEMY_DATABASE_URI', '')
         if uri.startswith('sqlite:///'):
             path = uri[len('sqlite:///'):]
@@ -23,6 +21,8 @@ class BackupService:
                 base_dir = current_app.config.get('BASE_DIR', os.path.abspath('.'))
                 path = os.path.join(base_dir, path)
             return path
+        if 'SQLITE_PATH' in current_app.config and current_app.config['SQLITE_PATH']:
+            return current_app.config['SQLITE_PATH']
         return current_app.config.get('DEFAULT_SQLITE_PATH', os.path.abspath('instance/database.sqlite3'))
 
     @staticmethod

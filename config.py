@@ -56,6 +56,8 @@ class Config:
     # Política de expiração de páginas sem acesso: 5 dias
     PAGE_EXPIRATION_DAYS = 5
     CLEANUP_INTERVAL_MINUTES = int(os.getenv('CLEANUP_INTERVAL_MINUTES', '60'))
+    # Atualiza o catálogo automaticamente mesmo sem interação do leitor.
+    NEWS_SYNC_INTERVAL_MINUTES = int(os.getenv('NEWS_SYNC_INTERVAL_MINUTES', '15'))
     
     # Nome do cookie anônimo de leitor
     READER_COOKIE_NAME = 'noticias_reader_id'

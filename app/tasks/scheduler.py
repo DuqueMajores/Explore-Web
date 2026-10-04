@@ -3,6 +3,7 @@ import time
 import logging
 from flask import Flask
 from app.tasks.cleanup import clean_expired_pages
+from app.services.news_service import NewsService
 
 logger = logging.getLogger(__name__)
 
@@ -33,9 +34,21 @@ class MaintenanceScheduler:
         while not self._stop_event.is_set():
             try:
                 interval_minutes = 60
+                sync_interval_minutes = 15
                 if self.app:
                     interval_minutes = self.app.config.get('CLEANUP_INTERVAL_MINUTES', 60)
+                    sync_interval_minutes = self.app.config.get('NEWS_SYNC_INTERVAL_MINUTES', 15)
                 
+                logger.info("Executando ciclo agendado de sincronização de notícias...")
+                if self.app:
+                    with self.app.app_context():
+                        news_svc = NewsService(
+                            self.app.config.get('NEWS_API_KEY', ''),
+                            self.app.config.get('NEWS_API_BASE_URL', '')
+                        )
+                        count, message = news_svc.sync_all_categories()
+                        logger.info("Sincronização concluída: %s (%s novas)", message, count)
+
                 logger.info("Executando ciclo agendado de manutenção e expiração de páginas...")
                 clean_expired_pages(self.app, execution_type='automatic')
 
@@ -43,7 +56,8 @@ class MaintenanceScheduler:
                 logger.error(f"Erro no ciclo do agendador SQLite: {e}")
 
             # Dormir com checagem do evento de parada
-            interval_sec = max(60, interval_minutes * 60)
+            # Usa o menor intervalo configurado para que a sincronização não fique parada.
+            interval_sec = max(60, min(interval_minutes, sync_interval_minutes) * 60)
             self._stop_event.wait(timeout=interval_sec)
 
     def stop(self):

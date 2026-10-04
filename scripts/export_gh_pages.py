@@ -89,6 +89,10 @@ def export_static_site(output_dir='docs'):
     app = create_app()
     with app.app_context():
         news_svc = NewsService(app.config.get('NEWS_API_KEY', ''), app.config.get('NEWS_API_BASE_URL', ''))
+        # O GitHub Pages não executa Flask em tempo de acesso. Sincroniza antes
+        # da exportação para que cada deploy agendado publique um catálogo novo.
+        synced_count, sync_message = news_svc.sync_all_categories()
+        print(f"[*] Sincronização antes da exportação: {sync_message} ({synced_count} novas)")
         news_svc.seed_initial_articles()
 
         articles = NewsArticle.query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).all()
