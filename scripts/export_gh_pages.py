@@ -83,6 +83,19 @@ def make_relative_article(html: str) -> str:
     return h.replace('../../static/js/main.js', f'../../static/js/main.js?v={version}')\
             .replace('../../static/css/style.css', f'../../static/css/style.css?v={version}')
 
+def make_robust_404(html: str) -> str:
+    """Corrige URLs profundas/duplicadas antes que assets relativos sejam lidos."""
+    recovery_script = '''<script>
+(function () {
+    var path = window.location.pathname || '';
+    var match = path.match(/^(.*\\/)noticia\\/(?:noticia\\/)?abrir\\/(\\d+)\\/index\\.html$/);
+    if (match) {
+        window.location.replace(match[1] + 'noticia/abrir/' + match[2] + '/index.html');
+    }
+})();
+</script>'''
+    return html.replace('<head>', '<head>' + recovery_script, 1)
+
 def export_static_site(output_dir='docs'):
     print(f"[*] Iniciando exportação para GitHub Pages na pasta '{output_dir}/'...")
     
@@ -146,7 +159,7 @@ def export_static_site(output_dir='docs'):
             with open(os.path.join(output_dir, 'index.html'), 'w', encoding='utf-8') as f:
                 f.write(rel_html)
             with open(os.path.join(output_dir, '404.html'), 'w', encoding='utf-8') as f:
-                f.write(rel_html)
+                f.write(make_robust_404(rel_html))
             print("[✓] Página inicial exportada com sucesso para docs/index.html e docs/404.html")
 
             # Salva também na raiz /index.html (incluindo Vite script para compatibilidade de build)

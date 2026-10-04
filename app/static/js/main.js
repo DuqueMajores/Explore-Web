@@ -92,6 +92,27 @@ document.addEventListener('DOMContentLoaded', () => {
         return text.replace(/[&<>"']/g, m => map[m]);
     }
 
+    // O catálogo estático guarda links relativos (noticia/...). Em páginas
+    // internas ou após um 404 do GitHub Pages, o navegador poderia anexá-los
+    // ao diretório atual e gerar /noticia/noticia/.... Sempre resolve a partir
+    // da raiz do repositório publicado.
+    function resolveStaticArticleUrl(target) {
+        if (!target || target.startsWith('/') || target.startsWith('#') || /^[a-z][a-z0-9+.-]*:/i.test(target)) {
+            return target;
+        }
+
+        const normalized = target.replace(/^\.\//, '');
+        if (!normalized.startsWith('noticia/')) return target;
+
+        const marker = '/noticia/';
+        const currentPath = window.location.pathname || '/';
+        const markerIndex = currentPath.indexOf(marker);
+        const basePath = markerIndex >= 0
+            ? currentPath.slice(0, markerIndex + 1)
+            : currentPath.slice(0, currentPath.lastIndexOf('/') + 1);
+        return `${basePath}${normalized}`;
+    }
+
     // Remove duplicatas por título ou foto antes de renderizar o feed.
     function deduplicateArticles(articles) {
         const seenTitles = new Set();
@@ -186,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!heroSection) return;
         const fallback = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80';
         heroSection.classList.remove('hidden');
-        if (heroLink) heroLink.href = item.open_url || `noticia/${item.slug || item.id}/index.html`;
+        if (heroLink) heroLink.href = resolveStaticArticleUrl(item.open_url || `noticia/${item.slug || item.id}/index.html`);
         if (heroImage) { heroImage.src = item.image_url || fallback; heroImage.alt = item.title || ''; }
         if (heroCategory) heroCategory.textContent = item.category || '';
         if (heroTitle) heroTitle.textContent = item.title || '';
@@ -202,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const defaultCover = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80';
         const coverImg = item.image_url || defaultCover;
-        const targetUrl = item.open_url || `noticia/${item.slug || item.id}/index.html`;
+        const targetUrl = resolveStaticArticleUrl(item.open_url || `noticia/${item.slug || item.id}/index.html`);
 
         card.innerHTML = `
             <a href="${targetUrl}" class="block space-y-3">
