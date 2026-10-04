@@ -31,6 +31,24 @@ def format_time_ago(dt):
         days = int(seconds // 86400)
         return f'há {days} dias'
 
+
+def unique_articles(articles):
+    """Remove matérias repetidas por título ou imagem antes da paginação."""
+    seen_titles, seen_images, unique = set(), set(), []
+    for article in articles:
+        title_key = ' '.join((article.title or '').lower().split())
+        image_key = (article.image_url or '').strip().lower()
+        if title_key and title_key in seen_titles:
+            continue
+        if image_key and image_key in seen_images:
+            continue
+        if title_key:
+            seen_titles.add(title_key)
+        if image_key:
+            seen_images.add(image_key)
+        unique.append(article)
+    return unique
+
 @api_bp.route('/noticias')
 def get_articles_feed():
     """
@@ -54,12 +72,14 @@ def get_articles_feed():
             (NewsArticle.description.ilike(f'%{search_query}%'))
         )
 
-    total = query.count()
-    offset = (page - 1) * per_page
-    articles = query.order_by(
+    ordered_articles = query.order_by(
         NewsArticle.published_at.desc().nullslast(),
         NewsArticle.id.desc()
-    ).offset(offset).limit(per_page).all()
+    ).all()
+    unique = unique_articles(ordered_articles)
+    total = len(unique)
+    offset = (page - 1) * per_page
+    articles = unique[offset:offset + per_page]
 
     # Se o leitor estiver se aproximando do fim dos artigos salvos localmente,
     # busca automaticamente novas matérias em tempo real da NewsAPI e persiste no SQLite
@@ -78,11 +98,13 @@ def get_articles_feed():
                     news_svc.fetch_and_store_from_api()
 
                 # Re-executa query com novos artigos
-                total = query.count()
-                articles = query.order_by(
+                ordered_articles = query.order_by(
                     NewsArticle.published_at.desc().nullslast(),
                     NewsArticle.id.desc()
-                ).offset(offset).limit(per_page).all()
+                ).all()
+                unique = unique_articles(ordered_articles)
+                total = len(unique)
+                articles = unique[offset:offset + per_page]
         except Exception as e:
             current_app.logger.warning(f"Auto-fetch NewsAPI no scroll: {e}")
 

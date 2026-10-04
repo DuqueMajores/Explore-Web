@@ -1,4 +1,4 @@
-// Interações limpas, fusos horários em tempo real, Rolagem Infinita e Atualização Automática
+// Interações limpas, fusos horários em tempo real e rolagem infinita sem interromper a leitura
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Data formatada em português no topo do Explore
     const dateEl = document.getElementById('currentDate');
@@ -53,12 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         handleScroll();
+        deduplicateRenderedCards();
 
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
+            // A seta é um ponto explícito de atualização, sem refresh durante a rolagem.
+            window.setTimeout(() => refreshPageFeed(false), 550);
         });
     }
 
@@ -75,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCategory = feedContainer ? (feedContainer.getAttribute('data-category') || 'todas').toLowerCase() : 'todas';
     let currentQuery = feedContainer ? (feedContainer.getAttribute('data-query') || '').toLowerCase() : '';
     let staticArticlesCache = null;
-    let lastRefreshTime = Date.now();
+    let lastRefreshTime = 0;
 
     function escapeHtml(text) {
         if (!text) return '';
@@ -89,12 +92,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return text.replace(/[&<>"']/g, m => map[m]);
     }
 
+    // Remove duplicatas por título ou foto antes de renderizar o feed.
+    function deduplicateArticles(articles) {
+        const seenTitles = new Set();
+        const seenImages = new Set();
+        return (Array.isArray(articles) ? articles : []).filter(article => {
+            const title = String(article.title || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            const image = String(article.image_url || '').trim().toLowerCase();
+            if (title && seenTitles.has(title)) return false;
+            if (image && seenImages.has(image)) return false;
+            if (title) seenTitles.add(title);
+            if (image) seenImages.add(image);
+            return true;
+        });
+    }
+
+    function deduplicateRenderedCards() {
+        const seenTitles = new Set();
+        const seenImages = new Set();
+        document.querySelectorAll('#newsGrid article').forEach(card => {
+            const title = (card.querySelector('h3')?.textContent || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            const image = (card.querySelector('img')?.getAttribute('src') || '').trim().toLowerCase();
+            if ((title && seenTitles.has(title)) || (image && seenImages.has(image))) {
+                card.remove();
+                return;
+            }
+            if (title) seenTitles.add(title);
+            if (image) seenImages.add(image);
+        });
+    }
+
     // Carrega do arquivo estático (para compatibilidade total com GitHub Pages)
     async function loadFromStaticJson(page, perPage, categoryFilter = null) {
         const cat = (categoryFilter !== null ? categoryFilter : currentCategory).toLowerCase();
 
         // Sempre busca fresco se for página 1 ou forçado
-        if (!staticArticlesCache || page === 1) {
+        if (!staticArticlesCache) {
             const jsonUrls = [
                 `./data/articles.json?t=${Date.now()}`,
                 `../data/articles.json?t=${Date.now()}`,
@@ -118,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return { articles: [], has_more: false };
         }
 
-        let filtered = staticArticlesCache;
+        let filtered = deduplicateArticles(staticArticlesCache);
         if (cat && cat !== 'todas') {
             filtered = filtered.filter(a => (a.category || '').toLowerCase() === cat);
         }
@@ -198,16 +231,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch(`/api/noticias?${params.toString()}`);
                 if (response.ok) {
                     const data = await response.json();
-                    articles = data.articles || [];
+                    articles = deduplicateArticles(data.articles || []);
                     more = data.has_more;
                 } else {
                     const staticData = await loadFromStaticJson(nextPage, 6);
-                    articles = staticData.articles;
+                    articles = deduplicateArticles(staticData.articles);
                     more = staticData.has_more;
                 }
             } catch (netErr) {
                 const staticData = await loadFromStaticJson(nextPage, 6);
-                articles = staticData.articles;
+                articles = deduplicateArticles(staticData.articles);
                 more = staticData.has_more;
             }
 
@@ -285,16 +318,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const res = await fetch(`/api/noticias?${params.toString()}`);
                     if (res.ok) {
                         const data = await res.json();
-                        firstBatch = data.articles || [];
+                        firstBatch = deduplicateArticles(data.articles || []);
                         more = data.has_more;
                     } else {
                         const staticData = await loadFromStaticJson(1, 7);
-                        firstBatch = staticData.articles;
+                        firstBatch = deduplicateArticles(staticData.articles);
                         more = staticData.has_more;
                     }
                 } catch (e) {
                     const staticData = await loadFromStaticJson(1, 7);
-                    firstBatch = staticData.articles;
+                    firstBatch = deduplicateArticles(staticData.articles);
                     more = staticData.has_more;
                 }
 
@@ -353,8 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 7. ATUALIZAÇÃO AUTOMÁTICA TODA VEZ QUE MUDAR DE PÁGINA OU CATEGORIA
     // A) Toda vez que o leitor retornar a esta página (ex: clicou em voltar da matéria)
     window.addEventListener('pageshow', (event) => {
-        // Se a página veio do cache de histórico do navegador (bfcache), atualiza imediatamente
-        refreshPageFeed(false);
+        // Atualiza somente ao retornar pelo histórico; a carga inicial não toca no DOM.
+        if (event.persisted) refreshPageFeed(false);
     });
 
     // B) Toda vez que a navegação do histórico mudar (botões avançar/voltar)
@@ -365,14 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshPageFeed(false);
     });
 
-    // C) Toda vez que o leitor alternar entre as abas do navegador e voltar para o Explore
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && Date.now() - lastRefreshTime > 25000) {
-            refreshPageFeed(false);
-        }
-    });
-
-    // D) Transição suave e atualização automática instantânea ao clicar nas categorias
+    // C) Transição suave e atualização automática instantânea ao clicar nas categorias
     const categoryLinks = document.querySelectorAll('nav a[href*="categoria="], nav a[href="{{ url_for(\'news.index\') }}"], nav a[href="/"], nav a[href="./index.html"]');
     categoryLinks.forEach(link => {
         link.addEventListener('click', (e) => {
@@ -402,10 +428,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // E) Atualização automática periódica em segundo plano (a cada 60s)
-    setInterval(() => {
-        if (!document.hidden) {
-            refreshPageFeed(false);
-        }
-    }, 60000);
 });

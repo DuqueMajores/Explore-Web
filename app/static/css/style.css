@@ -56,3 +56,8 @@ button.bg-facebook, a.bg-facebook {
 button.bg-facebook:hover, a.bg-facebook:hover {
     background-color: #166fe5;
 }
+
+/* Respiro visual entre a tira azul e o cabeçalho */
+.site-header {
+    margin-top: 25px;
+}

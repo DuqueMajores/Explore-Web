@@ -19,6 +19,14 @@
     <meta name="twitter:description" content="{% block twitter_description %}{{ self.og_description() }}{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}{{ self.og_image() }}{% endblock %}">
 
+    <!-- Adcash -->
+    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+    <script type="text/javascript">
+        aclib.runAutoTag({
+            zoneId: 'kbn4rgynck',
+        });
+    </script>
+
     <!-- Tipografia Editorial: Inter & Serif clássico -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -213,7 +221,7 @@
     </div>
 
     <!-- Top Bar Minimalista -->
-    <div class="border-b border-neutral-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-40">
+    <div class="border-b border-neutral-200/80 bg-white/70 backdrop-blur-md sticky top-0 z-40 site-header">
         <div class="max-w-5xl mx-auto px-4 sm:px-6">
             <div class="flex items-center justify-between h-14">
                 <!-- Data Atual -->

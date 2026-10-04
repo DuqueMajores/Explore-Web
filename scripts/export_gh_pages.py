@@ -81,7 +81,22 @@ def export_static_site(output_dir='docs'):
         news_svc.seed_initial_articles()
 
         articles = NewsArticle.query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).all()
-        print(f"[*] Total de matérias no SQLite: {len(articles)}")
+
+        # Evita exibir a mesma matéria ou a mesma foto várias vezes no catálogo exportado.
+        seen_titles, seen_images, unique_articles = set(), set(), []
+        for article in articles:
+            title_key = ' '.join((article.title or '').lower().split())
+            image_key = (article.image_url or '').strip().lower()
+            if title_key and title_key in seen_titles:
+                continue
+            if image_key and image_key in seen_images:
+                continue
+            seen_titles.add(title_key)
+            if image_key:
+                seen_images.add(image_key)
+            unique_articles.append(article)
+        articles = unique_articles
+        print(f"[*] Total de matérias únicas no SQLite: {len(articles)}")
 
         # Limpa e recria diretório de saída docs/
         if os.path.exists(output_dir):

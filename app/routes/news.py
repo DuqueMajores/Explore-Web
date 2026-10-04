@@ -22,6 +22,24 @@ def get_or_set_reader_id(response=None) -> str:
             response.set_cookie(cookie_name, reader_id, max_age=max_age, httponly=True, samesite='Lax')
     return reader_id
 
+
+def unique_articles(articles):
+    """Remove matérias repetidas por título ou imagem no carregamento inicial."""
+    seen_titles, seen_images, unique = set(), set(), []
+    for article in articles:
+        title_key = ' '.join((article.title or '').lower().split())
+        image_key = (article.image_url or '').strip().lower()
+        if title_key and title_key in seen_titles:
+            continue
+        if image_key and image_key in seen_images:
+            continue
+        if title_key:
+            seen_titles.add(title_key)
+        if image_key:
+            seen_images.add(image_key)
+        unique.append(article)
+    return unique
+
 @news_bp.route('/')
 def index():
     """Página inicial com listagem das notícias obtidas da NewsAPI/SQLite."""
@@ -41,8 +59,10 @@ def index():
 
     # Carrega o primeiro lote de artigos (1 destaque + 6 no grid) para renderização imediata rápida
     initial_limit = 7
-    total_matching = query.count()
-    articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).limit(initial_limit).all()
+    ordered_articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).all()
+    unique = unique_articles(ordered_articles)
+    total_matching = len(unique)
+    articles = unique[:initial_limit]
 
     # Se a base estiver vazia ou com poucas matérias para a categoria selecionada, busca automaticamente
     if not articles or total_matching < 4:
@@ -51,8 +71,10 @@ def index():
             news_svc.fetch_and_store_from_api(category=category)
         else:
             news_svc.seed_initial_articles()
-        total_matching = query.count()
-        articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).limit(initial_limit).all()
+        ordered_articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).all()
+        unique = unique_articles(ordered_articles)
+        total_matching = len(unique)
+        articles = unique[:initial_limit]
 
     categories = [
         ('todas', 'Todas'),
