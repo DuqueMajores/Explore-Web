@@ -70,18 +70,18 @@ def make_relative_home(html: str) -> str:
     h = h.replace("fetch('/api/noticias", "fetch('./data/articles.json")
     return add_asset_version(h)
 
-def make_relative_article(html: str) -> str:
-    """Ajusta links dentro das páginas de matéria (/noticia/<slug>/)."""
+def make_relative_article(html: str, prefix: str = '../../') -> str:
+    """Ajusta links conforme a profundidade da página estática de matéria."""
     h = html
-    h = h.replace('href="/static/', 'href="../../static/')
-    h = h.replace('src="/static/', 'src="../../static/')
-    h = re.sub(r'href="/\?categoria=([^"]+)"', r'href="../../index.html?categoria=\1"', h)
-    h = re.sub(r'href="/noticia/abrir/(\d+)"', r'href="../../noticia/abrir/\1/index.html"', h)
-    h = re.sub(r'href="/noticia/([^"/?#]+)"', r'href="../../noticia/\1/index.html"', h)
-    h = h.replace('href="/"', 'href="../../index.html"')
+    h = h.replace('href="/static/', f'href="{prefix}static/')
+    h = h.replace('src="/static/', f'src="{prefix}static/')
+    h = re.sub(r'href="/\?categoria=([^"]+)"', rf'href="{prefix}index.html?categoria=\1"', h)
+    h = re.sub(r'href="/noticia/abrir/(\d+)"', rf'href="{prefix}noticia/abrir/\1/index.html"', h)
+    h = re.sub(r'href="/noticia/([^"/?#]+)"', rf'href="{prefix}noticia/\1/index.html"', h)
+    h = h.replace('href="/"', f'href="{prefix}index.html"')
     version = asset_version()
-    return h.replace('../../static/js/main.js', f'../../static/js/main.js?v={version}')\
-            .replace('../../static/css/style.css', f'../../static/css/style.css?v={version}')
+    return h.replace(f'{prefix}static/js/main.js', f'{prefix}static/js/main.js?v={version}')\
+            .replace(f'{prefix}static/css/style.css', f'{prefix}static/css/style.css?v={version}')
 
 def make_robust_404(html: str) -> str:
     """Corrige URLs profundas/duplicadas antes que assets relativos sejam lidos."""
@@ -214,8 +214,11 @@ def export_static_site(output_dir='docs'):
                 id_dir = os.path.join(output_dir, 'noticia', 'abrir', str(a.id))
                 os.makedirs(id_dir, exist_ok=True)
                 if art_resp.status_code == 200:
+                    # O alias /noticia/abrir/<id>/ tem um nível extra em
+                    # relação a /noticia/<slug>/ e precisa de ../../../.
+                    alias_html = make_relative_article(art_resp.data.decode('utf-8'), prefix='../../../')
                     with open(os.path.join(id_dir, 'index.html'), 'w', encoding='utf-8') as f:
-                        f.write(art_html)
+                        f.write(alias_html)
 
         # Salva docs/data/articles.json e copia para /data/articles.json
         data_json_path = os.path.join(output_dir, 'data', 'articles.json')
