@@ -1,10 +1,10 @@
-name: Deploy Explore to GitHub Pages
+name: Atualizar notícias e publicar Explore
 
 on:
-  push:
-    branches:
-      - main
-      - master
+  # O catálogo é reconstruído sem depender de novos commits no código.
+  # Horários deslocados reduzem atrasos do GitHub Actions no início da hora.
+  schedule:
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -13,11 +13,11 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: 'pages-news-refresh'
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  refresh-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -33,21 +33,19 @@ jobs:
           python-version: '3.11'
 
       - name: Instalar Dependências do Python
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
-      - name: Exportar Site Estático (docs/)
-        run: |
-          python3 scripts/export_gh_pages.py
+      - name: Sincronizar fontes e gerar catálogo atualizado
+        run: python3 scripts/export_gh_pages.py
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Fazer Upload do Artefato do Site
+      - name: Fazer Upload do Artefato atualizado
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'docs/'
+          path: docs/
 
-      - name: Deploy no GitHub Pages
+      - name: Publicar catálogo atualizado
         id: deployment
         uses: actions/deploy-pages@v4
