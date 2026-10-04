@@ -1,4 +1,5 @@
 import hashlib
+import re
 from typing import Optional, List
 from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, Text, DateTime, Index
