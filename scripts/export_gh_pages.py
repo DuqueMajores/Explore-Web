@@ -48,6 +48,15 @@ def format_time_ago(dt):
         days = int(seconds // 86400)
         return f'há {days} dias'
 
+def asset_version() -> str:
+    """Usa a revisão do CI para impedir que o CDN mantenha JS/CSS antigos."""
+    return os.environ.get('GITHUB_SHA', datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S'))[:12]
+
+def add_asset_version(html: str) -> str:
+    version = asset_version()
+    return html.replace('./static/js/main.js', f'./static/js/main.js?v={version}')\
+               .replace('./static/css/style.css', f'./static/css/style.css?v={version}')
+
 def make_relative_home(html: str) -> str:
     """Ajusta links e caminhos para funcionamento perfeito em subpastas do GitHub Pages."""
     h = html
@@ -59,7 +68,7 @@ def make_relative_home(html: str) -> str:
     h = h.replace('href="/"', 'href="./index.html"')
     h = h.replace('action="/"', 'action="./index.html"')
     h = h.replace("fetch('/api/noticias", "fetch('./data/articles.json")
-    return h
+    return add_asset_version(h)
 
 def make_relative_article(html: str) -> str:
     """Ajusta links dentro das páginas de matéria (/noticia/<slug>/)."""
@@ -70,7 +79,9 @@ def make_relative_article(html: str) -> str:
     h = re.sub(r'href="/noticia/abrir/(\d+)"', r'href="../../noticia/abrir/\1/index.html"', h)
     h = re.sub(r'href="/noticia/([^"/?#]+)"', r'href="../../noticia/\1/index.html"', h)
     h = h.replace('href="/"', 'href="../../index.html"')
-    return h
+    version = asset_version()
+    return h.replace('../../static/js/main.js', f'../../static/js/main.js?v={version}')\
+            .replace('../../static/css/style.css', f'../../static/css/style.css?v={version}')
 
 def export_static_site(output_dir='docs'):
     print(f"[*] Iniciando exportação para GitHub Pages na pasta '{output_dir}/'...")

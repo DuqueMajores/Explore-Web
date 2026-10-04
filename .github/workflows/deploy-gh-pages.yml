@@ -33,7 +33,7 @@ jobs:
 
       - name: Instalar Dependências do Python
         run: |
-          pip install flask flask_sqlalchemy requests
+          pip install -r requirements.txt
 
       - name: Exportar Site Estático (docs/)
         run: |
