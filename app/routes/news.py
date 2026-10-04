@@ -58,7 +58,7 @@ def index():
         )
 
     # Carrega o primeiro lote de artigos (1 destaque + 6 no grid) para renderização imediata rápida
-    initial_limit = 7
+    initial_limit = 13
     ordered_articles = query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).all()
     unique = unique_articles(ordered_articles)
     total_matching = len(unique)

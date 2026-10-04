@@ -173,6 +173,28 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function updateHero(item) {
+        if (!item) return;
+        const heroSection = document.getElementById('heroSection');
+        const heroLink = document.getElementById('heroLink');
+        const heroImage = document.getElementById('heroImage');
+        const heroCategory = document.getElementById('heroCategory');
+        const heroTitle = document.getElementById('heroTitle');
+        const heroDescription = document.getElementById('heroDescription');
+        const heroAuthor = document.getElementById('heroAuthor');
+        const heroTime = document.getElementById('heroTime');
+        if (!heroSection) return;
+        const fallback = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80';
+        heroSection.classList.remove('hidden');
+        if (heroLink) heroLink.href = item.open_url || `noticia/${item.slug || item.id}/index.html`;
+        if (heroImage) { heroImage.src = item.image_url || fallback; heroImage.alt = item.title || ''; }
+        if (heroCategory) heroCategory.textContent = item.category || '';
+        if (heroTitle) heroTitle.textContent = item.title || '';
+        if (heroDescription) heroDescription.textContent = item.short_summary || item.description || '';
+        if (heroAuthor) heroAuthor.textContent = item.author || 'Redação Explore';
+        if (heroTime) heroTime.textContent = item.time_ago || 'recente';
+    }
+
     function createCardElement(item) {
         const card = document.createElement('article');
         card.className = 'group flex flex-col justify-between opacity-0 translate-y-4 transition-all duration-500 ease-out';
@@ -223,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const params = new URLSearchParams({
                     page: nextPage,
-                    per_page: 6,
+                    per_page: 12,
                     categoria: currentCategory,
                     q: currentQuery
                 });
@@ -234,12 +256,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     articles = deduplicateArticles(data.articles || []);
                     more = data.has_more;
                 } else {
-                    const staticData = await loadFromStaticJson(nextPage, 6);
+                    const staticData = await loadFromStaticJson(nextPage, 12);
                     articles = deduplicateArticles(staticData.articles);
                     more = staticData.has_more;
                 }
             } catch (netErr) {
-                const staticData = await loadFromStaticJson(nextPage, 6);
+                const staticData = await loadFromStaticJson(nextPage, 12);
                 articles = deduplicateArticles(staticData.articles);
                 more = staticData.has_more;
             }
@@ -310,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const params = new URLSearchParams({
                         page: 1,
-                        per_page: 7,
+                        per_page: 13,
                         categoria: currentCategory,
                         q: currentQuery,
                         t: Date.now()
@@ -321,18 +343,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         firstBatch = deduplicateArticles(data.articles || []);
                         more = data.has_more;
                     } else {
-                        const staticData = await loadFromStaticJson(1, 7);
+                        const staticData = await loadFromStaticJson(1, 13);
                         firstBatch = deduplicateArticles(staticData.articles);
                         more = staticData.has_more;
                     }
                 } catch (e) {
-                    const staticData = await loadFromStaticJson(1, 7);
+                    const staticData = await loadFromStaticJson(1, 13);
                     firstBatch = deduplicateArticles(staticData.articles);
                     more = staticData.has_more;
                 }
 
                 if (firstBatch.length > 0) {
-                    // Mantém o grid sincronizado com as matérias mais recentes
+                    // O destaque sempre pertence à categoria/filtro atualmente selecionado.
+                    updateHero(firstBatch[0]);
                     newsGrid.innerHTML = '';
                     firstBatch.slice(1).forEach(item => {
                         const card = createCardElement(item);
@@ -416,6 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 currentCategory = targetCat;
                 if (feedContainer) feedContainer.setAttribute('data-category', targetCat);
+                const feedTitle = document.getElementById('feedCategoryTitle');
+                if (feedTitle) feedTitle.textContent = targetCat === 'todas' ? 'Edição de Hoje' : targetCat;
 
                 // Atualiza a URL sem recarregar tela inteira
                 const newUrl = targetCat === 'todas' ? (window.location.pathname || './index.html') : `?categoria=${targetCat}`;
@@ -427,5 +452,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // URLs abertas diretamente com categoria/filtro também carregam o lote correto.
+    if (currentCategory !== 'todas' || currentQuery) {
+        refreshPageFeed(false);
+    }
+
 
 });

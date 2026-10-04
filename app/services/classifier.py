@@ -3,6 +3,9 @@ Serviço de classificação de notícias por categorias.
 Atribui categorias padronizadas às matérias obtidas da NewsAPI.
 """
 
+import re
+import unicodedata
+
 KEYWORDS_MAP = {
     'tecnologia': [
         'tecnologia', 'tech', 'software', 'hardware', 'ia', 'inteligencia artificial',
@@ -40,17 +43,16 @@ KEYWORDS_MAP = {
 def classify_text(title: str = '', description: str = '', source: str = '') -> str:
     """
     Analisa o texto de uma notícia e retorna a categoria mais adequada.
-    Se nenhuma palavra-chave for encontrada, retorna 'geral'.
+    Usa palavras inteiras para evitar falsos positivos de siglas curtas.
     """
-    combined = f"{title} {description} {source}".lower()
-    
+    combined = unicodedata.normalize('NFC', f"{title} {description} {source}".lower())
     scores = {}
     for category, keywords in KEYWORDS_MAP.items():
-        score = sum(1 for kw in keywords if kw in combined)
-        if score > 0:
+        score = 0
+        for keyword in keywords:
+            pattern = rf'(?<![\w]){re.escape(keyword.lower())}(?![\w])'
+            if re.search(pattern, combined, flags=re.IGNORECASE):
+                score += 1
+        if score:
             scores[category] = score
-            
-    if not scores:
-        return 'geral'
-        
-    return max(scores, key=scores.get)
+    return max(scores, key=scores.get) if scores else 'geral'

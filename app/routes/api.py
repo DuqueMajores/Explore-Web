@@ -57,7 +57,7 @@ def get_articles_feed():
     permitindo ao cliente carregar novidades dinamicamente conforme rola a página.
     """
     page = request.args.get('page', 1, type=int)
-    per_page = request.args.get('per_page', 9, type=int)
+    per_page = request.args.get('per_page', 12, type=int)
     category = request.args.get('categoria', 'todas').lower()
     search_query = request.args.get('q', '').strip()
 
