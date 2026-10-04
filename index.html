@@ -3,6 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Adcash Library & AutoTag -->
+    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
+    <script type="text/javascript">
+      aclib.runAutoTag({
+        zoneId: 'kbn4rgynck',
+      });
+    </script>
+
     <title>Explore — Notícias em Tempo Real</title>
 
     <!-- Meta Tags para Compartilhamento e Redes Sociais (Open Graph / Facebook) -->
@@ -65,7 +74,7 @@
 <body class="bg-[#faf9f6] text-ink-900 font-sans min-h-screen flex flex-col antialiased selection:bg-neutral-900 selection:text-white">
 
     <!-- Tira de Cor Azul: Cotações, Ações e Fusos Horários em Movimento Contínuo -->
-    <div class="bg-blue-700 text-white text-[11px] font-medium tracking-wide overflow-hidden border-b border-blue-800 shadow-xs select-none">
+    <div class="bg-blue-700 text-white text-[11px] font-medium tracking-wide overflow-hidden border-b border-blue-800 shadow-xs select-none mb-[20px]">
         <div class="ticker-wrapper py-2 flex whitespace-nowrap">
             <!-- Faixa 1 (duplicada para animação infinita suave) -->
             <div class="ticker-track flex items-center space-x-8 px-4">
@@ -284,7 +293,7 @@
 
     <!-- Busca Minimalista -->
     <div class="flex items-center justify-between border-b border-neutral-200 pb-4">
-        <h1 class="text-xs uppercase tracking-widest font-semibold text-neutral-400">
+        <h1 id="feedCategoryTitle" class="text-xs uppercase tracking-widest font-semibold text-neutral-400">
             
                 Edição de Hoje
             
@@ -299,250 +308,514 @@
         </form>
     </div>
 
+    <!-- Matéria Principal em Destaque (Destaque Exclusivo da Categoria) -->
     
-        <!-- Matéria Principal em Destaque (Primeira Notícia) -->
-        
-        <section class="border-b border-neutral-200 pb-10">
-            <a href="./noticia/abrir/1/index.html" class="group block">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    <!-- Capa Principal -->
-                    <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
-                        <img src="https://cdn.flatout.com.br/wp-content/uploads/2026/10/Zero-a-300-021026.png"
-                             alt="Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!"
-                             onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
-                             class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
-                    </div>
-                    <!-- Conteúdo Principal -->
-                    <div class="lg:col-span-5 space-y-3">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
-                            tecnologia
-                        </span>
-                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
-                            Dolphin Mini entre os 3 mais vendidos | um câmbio DCT “manual” e mais!
-                        </h2>
-                        <p class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
-                            Bem vindo, FlatOuter! Aqui está nossa seleção diária das notícias mais importantes e relevantes do mundo automotivo para você ficar por dentro de tudo, sem perder tempo com rage-baits, discussões rasas e textos desalmados gerados por IA alucinadas. (Para comp…
-                        </p>
-                        <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
-                            <span>Dalmo Hernandes</span>
-                            <span>•</span>
-                            <span>há 1 dia</span>
-                        </div>
+    <section id="heroSection" class="border-b border-neutral-200 pb-10 ">
+        <a id="heroLink" href="./noticia/abrir/972/index.html" class="group block">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Capa Principal -->
+                <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
+                    <img id="heroImage" src="https://s2-ge.glbimg.com/7tuZQ10JLqmT_6_lyVBQ-1I3IaY=/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/B/R/8BCBi8RCqBmwpUJFFRBA/2026-10-04t070602z-129768659-up1ema40jq1v2-rtrmadp-3-motor-f1-bahrain.jpg"
+                         alt="SIGA: GP do Bahrein na Malásia terá início após 40 minutos de atraso"
+                         onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
+                         class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
+                </div>
+                <!-- Conteúdo Principal -->
+                <div class="lg:col-span-5 space-y-3">
+                    <span id="heroCategory" class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                        esportes
+                    </span>
+                    <h2 id="heroTitle" class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
+                        SIGA: GP do Bahrein na Malásia terá início após 40 minutos de atraso
+                    </h2>
+                    <p id="heroDescription" class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
+                        SIGA: GP do Bahrein na Malásia terá início após 40 minutos de atraso Chuva forte adiou largada no Circuito de.
+                    </p>
+                    <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
+                        <span id="heroAuthor">GE Esportes</span>
+                        <span>•</span>
+                        <span id="heroTime">há 10 min</span>
                     </div>
                 </div>
-            </a>
-        </section>
+            </div>
+        </a>
+    </section>
+
+    
 
         <!-- Grade de Notícias (Rolagem Infinita) -->
         <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
             
-                <article class="group flex flex-col justify-between" data-article-id="2">
-                    <a href="./noticia/abrir/2/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="598">
+                    <a href="./noticia/abrir/598/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://medproc.congressoemfoco.com.br/artigoV7._PROC_AP5AC122900AT3ATX18.png"
-                                 alt="A eleição sob medida: a experiência de um mundo particular"
+                            <img src="https://s2-g1.glbimg.com/2vJxZeq1KpAkBd62pZPa_Veav4I=/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2026/A/g/6EkJI3QdeiIKzQu3XP6g/tempestade-parana.png"
+                                 alt="Paraná tem alerta vermelho de tempestade em 143 cidades neste domingo de eleições; veja onde"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            tecnologia
+                            geral
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            A eleição sob medida: a experiência de um mundo particular
+                            Paraná tem alerta vermelho de tempestade em 143 cidades neste domingo de eleições; veja onde
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Por Mauri Oliveira. Uma das maiores transformações da comunicação contemporânea acontece diante dos nossos olhos: a experiência de mundo está cada vez mais personalizada.
+                                Paraná terá chuvas e temporais no fim de semana de eleições
+O Paraná tem 142 cidades sob alerta vermelho de tempestade neste domingo (4), dia do primeiro turno das eleições de 2026. O aviso, de &#34;grande perigo&#34;, é do Instituto Nacional de Meteorologia (Inmet) e vale durante todo o dia.
+Segundo o instituto, nas áreas abrangidas pelo alerta, a chuva pode passar de 60 milímetros por hora ou de 100 milímetros ao longo do dia. Também são previstas rajadas de vento acima de 100 km/h e queda de granizo.
+✅ Siga o g1 Foz do Iguaçu e região no WhatsApp
+O Inmet alerta para grande risco de danos em construções, interrupção no fornecimento de energia elétrica, queda de árvores, alagamentos, prejuízos em plantações e transtornos no transporte rodoviário.
+Além das 142 cidades sob alerta vermelho, outras áreas do Paraná estão sob avisos laranja, de perigo, e amarelo, de perigo potencial, para tempestades.
+chuva paraná estrada bela vista do paraíso tempestade nuvem céu
+Bruna Melo/g1 Paraná
+Frente fria aumenta risco de temporais
+A previsão é de mudança nas condições do tempo neste domingo com o avanço de uma frente fria pelo Paraná.
+Segundo a Climatempo, há condições para chuva forte e temporais em praticamente todo o estado, principalmente nas regiões Norte, Noroeste, Oeste, Sudoeste, Centro e em áreas do Sul. A previsão inclui raios, chuva intensa e fortes rajadas de vento. A Climatempo também aponta risco de temporais no Paraná durante o domingo com o avanço da frente fria.
+As temperaturas também devem cair nas regiões com maior nebulosidade e chuva. Em Curitiba, a previsão é de mínima de 14°C e máxima de 21°C, com 95% de chance de chuva neste domingo.
+Leia também:
+Previsão do tempo: Como fica o tempo no Paraná após os temporais? 
+Tempestade: Temporal deixa um morto, desalojados e causa estragos no Paraná
+Eleição: De urna de lona a brindes proibidos, paranaense coleciona itens de eleições dos últimos 100 anos
+📅Previsão do tempo para o Paraná
+Domingo, 4 de outubro
+Domingo, 4 de outubro
+Reprodução/Simepar
+No domingo, a instabilidade se intensifica e a chuva se espalha por praticamente todo o Paraná. A previsão da Climatempo aponta que a atuação de sistemas de baixa pressão associada ao avanço da frente fria favorece períodos de chuva e pancadas, com possibilidade de chuva forte, risco de ventanias, granizo e trovoadas, além de acumulados elevados, principalmente no oeste, norte e centro do Estado.
+Os modelos do Simepar preveem que as tempestades devem se concentrar entre a madrugada e o início da manhã.
+&#34;Ao longo da tarde e noite alguns eventos de chuva ainda ocorrem, mas de forma mais pontual. Na segunda e terça-feira, o ambiente permanece bastante instável, devido à intensificação de um sistema de baixa pressão nos países vizinhos&#34;.
+Cuidados durante as tempestades
+tempestade temporal chuva nuvem nuvens paraná pr céu
+Paulo Silveira Padilha
+Durante rajadas de vento, o Inmet orienta que as pessoas não procurem abrigo embaixo de árvores, por causa do risco de queda e de descargas elétricas. Também é recomendado não estacionar veículos próximos a torres de transmissão e placas de propaganda.
+Nas cidades sob alerta laranja, a recomendação é, se possível, desligar aparelhos elétricos e o quadro geral de energia.
+Nas áreas sob alerta amarelo, a orientação é evitar o uso de aparelhos eletrônicos ligados à tomada.
+Em situações de emergência, a população pode procurar a Defesa Civil pelo telefone 199 e o Corpo de Bombeiros pelo 193.
+Cidades com alerta vermelho
+Altamira do Paraná
+Altônia
+Alto Piquiri
+Ampére
+Anahy
+Araruna
+Assis Chateaubriand
+Barracão
+Bela Vista da Caroba
+Bituruna
+Boa Esperança
+Boa Esperança do Iguaçu
+Boa Vista da Aparecida
+Bom Jesus do Sul
+Bom Sucesso do Sul
+Braganey
+Brasilândia do Sul
+Cafelândia
+Cafezal do Sul
+Campina da Lagoa
+Campina do Simão
+Campo Bonito
+Campo Mourão
+Candói
+Cantagalo
+Capanema
+Capitão Leônidas Marques
+Cascavel
+Catanduvas
+Céu Azul
+Chopinzinho
+Clevelândia
+Corbélia
+Coronel Domingos Soares
+Coronel Vivida
+Cruzeiro do Iguaçu
+Cruzeiro do Oeste
+Diamante D&#39;Oeste
+Diamante do Sul
+Dois Vizinhos
+Enéas Marques
+Entre Rios do Oeste
+Espigão Alto do Iguaçu
+Farol
+Flor da Serra do Sul
+Formosa do Oeste
+Foz do Iguaçu
+Foz do Jordão
+Francisco Alves
+Francisco Beltrão
+Goioerê
+Goioxim
+Guaíra
+Guaraniaçu
+Guarapuava
+Honório Serpa
+Ibema
+Iguatu
+Iporã
+Iracema do Oeste
+Itaipulândia
+Itapejara d&#39;Oeste
+Janiópolis
+Jesuítas
+Juranda
+Laranjal
+Laranjeiras do Sul
+Lindoeste
+Luiziana
+Mamborê
+Manfrinópolis
+Mangueirinha
+Marechal Cândido Rondon
+Mariluz
+Mariópolis
+Maripá
+Marmeleiro
+Marquinho
+Matelândia
+Mato Rico
+Medianeira
+Mercedes
+Missal
+Moreira Sales
+Nova Aurora
+Nova Cantu
+Nova Esperança do Sudoeste
+Nova Laranjeiras
+Nova Prata do Iguaçu
+Nova Santa Rosa
+Ouro Verde do Oeste
+Palmas
+Palmital
+Palotina
+Pato Bragado
+Pato Branco
+Perobal
+Pérola
+Pérola d&#39;Oeste
+Pinhal de São Bento
+Pinhão
+Pitanga
+Planalto
+Porto Barreiro
+Pranchita
+Quarto Centenário
+Quatro Pontes
+Quedas do Iguaçu
+Ramilândia
+Rancho Alegre D&#39;Oeste
+Realeza
+Renascença
+Reserva do Iguaçu
+Rio Bonito do Iguaçu
+Roncador
+Salgado Filho
+Salto do Lontra
+Santa Helena
+Santa Izabel do Oeste
+Santa Lúcia
+Santa Maria do Oeste
+Santa Tereza do Oeste
+Santa Terezinha de Itaipu
+Santo Antônio do Sudoeste
+São João
+São Jorge d&#39;Oeste
+São José das Palmeiras
+São Miguel do Iguaçu
+São Pedro do Iguaçu
+Saudade do Iguaçu
+Serranópolis do Iguaçu
+Sulina
+Terra Roxa
+Toledo
+Três Barras do Paraná
+Tuneiras do Oeste
+Tupãssi
+Ubiratã
+Umuarama
+Vera Cruz do Oeste
+Verê
+Virmond
+Vitorino
+VÍDEOS: Mais assistidos do g1 Paraná
+Leia mais notícias no g1 Oeste e.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Redação</span>
-                        <span>há 1 dia</span>
+                        <span class="truncate max-w-[150px]">G1 Globo</span>
+                        <span>há 20 min</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="3">
-                    <a href="./noticia/abrir/3/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="973">
+                    <a href="./noticia/abrir/973/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://ichef.bbci.co.uk/news/1200/branded_portuguese/31f9/live/d3605c90-bcbb-11f1-b3b2-8f83c947a78c.jpg"
-                                 alt="Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil"
+                            <img src="https://s2-ge.glbimg.com/Xu9aBISOVdzdpWw5AKYFSW6uKj0=/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/t/V/YMqpEeR2iw1VhIHkuuZg/gettyimages-2298483327.jpg"
+                                 alt="Fortes chuvas adiam largada do GP do Bahrein na Malásia"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            negocios
+                            esportes
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Preferência por Lula, cautela ao criticar Flávio: como a China (e a imprensa local) vê a eleição no Brasil
+                            Fortes chuvas adiam largada do GP do Bahrein na Malásia
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Jornais chineses — que são fortemente controlados pelo governo de Pequim — destacam que economia é determinante nas relações entre Brasil e China, independentemente de o presidente ser de esquerda ou direita.
+                                A chuva deu as caras no Circuito de Sepang e mudou os planos da Fórmula 1 neste domingo. Um forte temporal atingiu o circuito antes da largada do GP do Bahrein na Malásia e fez a direção de prova adiar o início da corrida, previsto anteriormente para as 4h da manhã (no horário de Brasília). A nova previsão para o começo da prova é às 4h40 (15h40, no horário local).
+Circuito de Sepang minutos antes da largada do GP do Bahrein na Malásia
+Alex Bierens de Haan/LAT Images
+A previsão do tempo para este domingo, antes, projetava apenas 30% de chance de chuva para a corrida. Entretanto, o clima instável na região falou mais alto, e a precipitação ganhou força a cerca de 35 minutos antes do início da prova, quando os carros faziam voltas de reconhecimento. 
+Com o novo horário de largada, a direção da corrida decidiu realizar duas voltas de apresentação do safety car antes de uma largada parada. Já de cara, Isack Hadjar aquaplanou e acabou atravessando a brita, antes de retornar ao traçado.
+É importante lembrar também que a F1 impõe algumas restrições aos pilotos quando decreta condições de baixa aderência. O botão de impulso extra, por exemplo, fica limitado e não aumenta a potência do carro. O botão de ultrapassagem também é desativado, e o limite máximo de entrega da energia elétrica recuperada pelo piloto é reduzida para facilitar o controle do carro sob o asfalto. 
+Carro médico deixa os boxes do Circuito de Sepang, palco do GP do Bahrein da F1 2026
+Sona Maleterova/Getty Images
+A Malásia fica pouco acima da Linha do Equador e está situada no hemisfério norte do planeta; isso significa que, na teoria, a estação do ano vigente no país é o outono. Entretanto, as estações não são tão definidas no território malaio, que registra períodos mais secos e mais chuvosos. Neste momento, o país atravessa o começo do período de monções, caracterizado por chuvas fortes e alta umidade.
+A F1, na teoria, está preparada para correr sob a chuva - com pneus para precipitação mais leve, e outros para chuva mais forte. Na prática, entretanto, a falta de visibilidade causada pela água e o risco de aquaplanagem deixam a direção de prova mais conservadora no que diz respeito a competir sob condições adversas de tempo.
+O carro médico foi enviado para a pista por volta das 4h da manhã no horário de Brasília, e chegou a perder tração em alguns trechos devido a grande quantidade de água no asfalto. Além disso, o radar meteorológico da F1 também perdeu o sinal e não está funcionando adequadamente.
+Initial plugin text
+- O carro médico está relatando uma quantidade significativa de água parada ao redor da pista. As condições atuais não são adequadas para iniciar a corrida - informou a Federação Internacional de Automobilismo (FIA).
+Vale destacar que a FIA decretou o alerta de risco de calor para o GP. A decisão foi tomada com base nas expectativas de que os termômetros alcançassem mais de 31ºC ao longo do fim de semana. 
+Carro médico no Circuito de Sepang
+Reprodução/F1
+Com a decisão, as equipes vão ter que cumprir exigências da FIA para reduzir a sensação de calor dos pilotos dentro do cockpit. A principal é a instalação de um sistema de refrigeração de pilotos no carro, com a exceção de equipamentos pessoais.
+As regras estipulam que todo o equipamento deve estar instalado antes do início de corridas, sejam elas principais (aos domingos) ou sprint, quando há - o que não é o caso do GP da Itália. Além disso, os pilotos também podem usar um colete de refrigeração, mas o uso não é obrigatório. 
+Max Verstappen na chuva antes do início do GP do Bahrein na Malásia
+Reprodução/F1
+Como sequer houve o acionamento das luzes que dão início à prova, a disputa está assegurada em sua totalidade, sem riscos de ser reduzida - até o momento. Porém, caso a largada seja realizada mas o mau tempo impeça a continuidade da prova como originalmente previsto, a F1 conta com uma pontuação de contingência criada em 2022.
+Se uma corrida for encerrada com menos de duas voltas dadas pelo líder sem a presença do safety car ou do safety car virtual, ela não concederá pontos. Se o líder da prova completar mais de duas voltas livremente, mas ainda menos de 25% da distância total da corrida, apenas os cinco primeiros colocados vão receber pontos: o vencedor, seis pontos; o segundo colocado, quatro; o terceiro, três; o quarto, dois e o quinto colocado, um ponto.
+Chuva no Circuito de Sepang, na Malásia
+Reprodução
+Caso o líder da prova complete de 25% a 50% da distância total de prova, os nove mais rápidos vão receber de um a 13 pontos. Se o líder percorrer de 50% a 75% da distância total prevista para a corrida, dez pilotos receberão de um a 19 pontos.
+Caso a prova seja totalmente concluída - ou acima de 75% da distância total, valem aos dez primeiros colocados a pontuação padrão, que concede 25 pontos para o vencedor, 18 para o segundo colocado, 15 para o terceiro, 12 para o quarto, dez pontos ao quinto, oito pontos ao sexto colocado e assim, reduzindo-se progressivamente até o décimo mais rápido receber um.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">https://www.facebook.com/bbcnews</span>
-                        <span>há 1 dia</span>
+                        <span class="truncate max-w-[150px]">GE Esportes</span>
+                        <span>há 48 min</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="4">
-                    <a href="./noticia/abrir/4/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="974">
+                    <a href="./noticia/abrir/974/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://static.dw.com/image/74251824_6.jpg"
-                                 alt="Entenda a doença de Creutzfeldt-Jakob, que levou à morte de Lito Sousa"
+                            <img src="https://s2-ge.glbimg.com/Rwo3FbgBjaowT0hpew56lUsq4Gg=/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/3/l/bxuDRRSACTrWUc1L8Pig/2026-07-02t013321z-1921192313-up1em7204bjzp-rtrmadp-3-soccer-worldcup-usa-bih.jpg"
+                                 alt="Raphael Claus defende expulsão na Copa do Mundo e comenta polêmica com Trump: &#34;Foge da nossa esfera&#34;"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            saude
+                            esportes
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            Entenda a doença de Creutzfeldt-Jakob, que levou à morte de Lito Sousa
+                            Raphael Claus defende expulsão na Copa do Mundo e comenta polêmica com Trump: &#34;Foge da nossa esfera&#34;
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Doença fatal, que destrói progressivamente neurônios, afeta cerca de 1 a 2 pessoas por milhão ao ano. Entenda sintomas, formas de transmissão, diagnóstico e as tentativas de tratamento.
+                                Raphael Claus fala sobre seu trabalho como árbitro
+Pouco mais de dois meses após a Copa do Mundo, o árbitro Raphael Claus comentou a polêmica envolvendo a suspensão do gancho do atacante Balogun e as declarações do presidente dos Estados Unidos, Donald Trump, de que o brasileiro seria &#34;um pouco suspeito&#34;. 
+Claus foi convidado do programa &#34;Altas Horas&#34;, na noite deste sábado. Questionado pelo apresentador Serginho Groisman sobre o impacto mundial do caso, ele defendeu sua atuação. 
+— Importante que quando a gente vai para uma competição dessa magnitude tem que estar muito bem preparado não só na parte física, técnica, mas também mental pela exposição que a gente tem mundialmente. Importante ter os conceitos para tomar as decisão dentro do campo de jogo, e de forma correta, como foi nosso caso — considerou, 
+— O que aconteceu após foge da nossa esfera. Para mim, foi muito positivo, principalmente o retorno que tive de apoio. Tanto das instituições que represento, que é a Fifa, Conmebol, a CBF e a Federação Paulista. E todos os brasileiros que torceram pelos árbitros que tiveram lá, tanto eu, o Wilton Sampaio, o Ramon Abatti. É uma lembrança que vou guardar positiva na minha carreira. Uma boa recordação — completou. 
+Árbitro Raphael Claus, no Altas Horas
+Reprodução: TV Globo
+Entenda o caso:
+Claus aplicou cartão vermelho direto a Balogun na vitória dos EUA por 2 a 0 sobre a Bósnia, no dia 1º de julho, após entrada dura do atacante em Tarik Muharemovic. O árbitro tomou a decisão após revisão no VAR. Balogun ficaria de fora do duelo das oitavas de final, diante da Bélgica, mas a punição foi suspensa pelo Comitê Disciplinar da Fifa neste domingo, na véspera da partida.
+Segundo a imprensa americana, membro do governo passaram a reunir informações para embasar um recurso contra a suspensão. Entre os materiais coletados estavam reportagens sobre investigações e antigas controvérsias envolvendo Claus.
+Donald Trump critica Raphael Claus: &#34;Muito suspeito&#34;
+Parte desse histórico remonta à CPI da Manipulação de Jogos e Apostas Esportivas de 2024. Claus foi ouvido como testemunha durante as investigações sobre suspeitas de manipulação em partidas do Campeonato Brasileiro. Entretanto, as apurações não encontraram qualquer evidência que ligasse o árbitro a um esquema de manipulação. Ele não foi denunciado nem sofreu qualquer punição, permanecendo normalmente no quadro da Fifa.
+Foi esse histórico que, de acordo com o The New York Times, Trump mencionou em conversa ao telefone com Infantino. Segundo o jornal, o presidente americano citou acusações de que Claus teria participado de manipulação de resultados por meio da aplicação irregular de cartões vermelhos, mesmo que essas alegações nunca tenham sido comprovadas pelas autoridades brasileiras.
+Ainda de acordo com o &#34;Politico&#34;, Trump telefonou para Infantino na quinta-feira, um dia após a expulsão de Balogun. A decisão do Comitê Disciplinar da Fifa, que suspendeu, por um ano, o cumprimento da punição, liberando o atacante para enfrentar a Bélgica nas oitavas de final, aconteceu três dias depois. 
+Raphael Claus expulsa Balogun em Estados Unidos x Bósnia
+Phil Noble/Reuters
+ Trump confirmou que pediu para a Fifa revisar o cartão vermelho dado a Balogun. Em coletiva de imprensa no Salão Oval da Casa Branca, o presidente disse o árbitro brasileiro era &#34;um pouco suspeito&#34; e citou o seu histórico.
+— Esse árbitro é um pouco suspeito. Se você verificar o passado dele… Eu não quero dizer isso, porque não gosto de criar polêmica, mas muito suspeito, como se eu pudesse te mostrar o histórico. Ele fez uma marcação que ninguém conseguiu acreditar, sabe? Até pessoas do outro lado — afirmou Trump.
+Na ocasião, a reversão da punição e a interferência do presidente americano foram bastante questionadas e provocaram duras críticas do ecossistema do futebol mundial. Claus também recebeu forte apoio da CBF e da Conmebol, e teve a atuação na partida elogiada pelo chefe de arbitragem da Fifa, Pierluigi.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Redação DW</span>
-                        <span>há 1 dia</span>
+                        <span class="truncate max-w-[150px]">GE Esportes</span>
+                        <span>há 48 min</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="5">
-                    <a href="./noticia/abrir/5/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="975">
+                    <a href="./noticia/abrir/975/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2022/04/10163300/770-podcast-conferencia-de-imprensa.jpg"
-                                 alt="PSP avisa agentes: permanência ilegal no país não é crime"
+                            <img src="https://s2-ge.glbimg.com/AFMUFy6rYW8l4fHq8AlJ0_EvLsc=/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/j/1/lDuFp7TqS8bFtBfj5hLA/afp-20261003-d26h6b7-v1-midres-fblindbrafriendly.jpg"
+                                 alt="Convocados da Seleção na Data Fifa chegam ao Brasil na tarde de segunda e estão à disposição para rodada do Brasileirão"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            tecnologia
+                            esportes
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            PSP avisa agentes: permanência ilegal no país não é crime
+                            Convocados da Seleção na Data Fifa chegam ao Brasil na tarde de segunda e estão à disposição para rodada do Brasileirão
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                DN avança com alerta da Provedoria de Justiça que alerta para &#34;detenções desproporcionais&#34; por perceções erróneas sobre imigração. Folha de São Paulo conta como o debate presidencial foi cancelado.
+                                Eric Faria, sobre Índia 0 x 4 Brasil: &#34;Jogo para ser esquecido&#34;
+Todos os convocados para a Data FIFA vão estar à disposição de seus clubes para a próxima rodada do Brasileirão. Dez dos onze convocados chegam ao Brasil no fim da tarde de segunda-feira, a exceção é Otávio, que desembarca em São Paulo neste domingo e segue para Belo Horizonte.
+O goleiro do Cruzeiro deixou Calcutá ainda na madrugada de domingo juntamente com o grupo de jogadores que seguiu para a Europa e o técnico Carlo Ancelotti. A primeira leva fez conexão em Doha, no Catar, antes de seguir para seus respectivos destinos.
+Samuel Lino comemora um de seus gols em Índia 0 x 4 Brasil
+AFP
+Hugo Souza, Matheuzinho, Breno Bidon, Gabriel Bontempo, Arthur Dias, Pedro Morisco, Pedro, Samuel Lino, Danilo e Martinelli deixaram a Índia na manhã de domingo rumo a Dubai. O grupo permanece nos Emirados Árabes até a manhã de segunda-feira, quando começa a perna final da viagem para toda a delegação. 
+O quarteto carioca vai em voo para o Rio de Janeiro, enquanto os outros seis vão para São Paulo. Arthur Dias e Pedro Morisco ainda encaram um trecho final para Curitiba, mas a expectativa é de que todos os jogadores convocados treinem por seus clubes na terça-feira.
+Três jogos de quarta-feira contam com convocados: Inter x Corinthians, Botafogo x Vasco e Cruzeiro x São Paulo; Na quinta-feira, jogam Santos x Flamengo, Athletico x Atlético-MG, Fluminense x Coritiba.
+A Seleção volta a se reunir em novembro para amistosos contra Japão e Singapura, em.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Beatriz Félix</span>
-                        <span>há 1 dia</span>
+                        <span class="truncate max-w-[150px]">GE Esportes</span>
+                        <span>há 50 min</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="6">
-                    <a href="./noticia/abrir/6/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="976">
+                    <a href="./noticia/abrir/976/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/f:webp/plain/https://s3.observador.pt/wp-content/uploads/2026/06/15153459/770-podcast-noticiario.png"
-                                 alt="As notícias das 6h"
+                            <img src="https://s2-ge.glbimg.com/hOE3uPN19jqOVGS4gAYpDsNRkC4=/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/c/a/kWeq1ZQEyDutDFtgOdvw/agif26061823164985.jpg"
+                                 alt="O que explica a queda de produção de Perotti no Sport e como Soso pode recuperar atacante"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            tecnologia
+                            esportes
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            As notícias das 6h
+                            O que explica a queda de produção de Perotti no Sport e como Soso pode recuperar atacante
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                As notícias na Rádio Observador. Aconteça o que acontecer.
+                                Athletic Club 1 x 2 Sport | Melhores momentos | 31ª rodada | Brasileirão Série B 2026
+Antes protagonista do Sport, o atacante Perotti caiu de rendimento e não vive um bom momento. A prova disso é que perdeu a posição no time titular contra o Athletic-MG, sendo substituído por Neto Pessoa, que marcou um dos gols da vitória da equipe pernambucana.
++ ✅Clique aqui para seguir o novo canal ge Sport no WhatsApp
++ Veja mais notícias do Sport no ge
+Sport conquista vitória importante fora de casa sobre o Athletic
+Perotti não balança as redes há seis jogos. Seu último gol foi na derrota do Sport por 2 a 1 diante do Novorizontino, fora de casa, quando ele marcou nos minutos finais da partida. Depois disso, contribuiu efetivamente com uma assistência em novo revés rubro-negro pelo mesmo placar, mas diante do CRB.
+Ao todo, são 11 gols e uma assistência do atacante em 30 partidas da Série B. Na avaliação do comentarista Cabral Neto, da TV Globo, foi justa a troca de Perotti por Neto Pessoa, mas isso não significa que o camisa 9 tenha que ser escanteado.
+&#34;A decisão de Mariano Soso faz todo sentido. Vinha sendo necessária essa busca por uma alternativa. Neto Pessoa aproveitou a oportunidade contra o Náutico, fez um gol e cavou espaço no jogo seguinte. Isso não significa que Perotti seja escanteado no elenco. Soso precisa encontrar soluções para recuperar seu bom futebol do início de sua passagem pelo Sport&#34;, iniciou Cabral Neto.
+- O funcionamento coletivo do Sport precisa evoluir, é verdade. A bola precisa ser melhor trabalhada e chegar em melhores condições para o atacante, mas vale o registro que, na boa fase inicial de Perotti, o time já sofria com alta incapacidade criativa e, ainda assim, ele se destacava e fazia a diferença. E, nesse aspecto, vale lembrar que a oscilação não é novidade na carreira do atleta - completou.
+Atacante Perotti, do Sport, em empate contra o Atlético-GO.
+Rafael Vieira/AGIF
+Perotti chegou ao Sport para a disputa da Série B precisando se recuperar após um recorte recente ruim na Chapecoense.
+Conseguiu responder de imediato e caiu nas graças da torcida do Sport, mas agora o atacante vive um momento negativo, que, na avaliação de Cabral Neto, precisa ser tratado com calma.
+&#34;Perotti já viveu vários momentos de alta e de queda de rendimento em outras temporadas, o que recomenda cuidado para não transformar uma fase ruim em diagnóstico definitivo. Nem o contrário&#34;, disse o comentarista.
+Pedro Perotti relembra dia que conheceu Cristiano Ronaldo em Portugal
+Precisando de uma sequência positiva na reta final da Série B para tentar voltar ao G-6 da competição, o Sport aposta na recuperação de Perotti como uma de suas armas. 
+E um ponto que pode ajudar a melhorar o desempenho do centroavante, na visão de Cabral Neto, é fazer com que ele seja mais participativo dentro da área, não fora.
+- Para tentar recuperá-lo, Soso precisa encontrar alternativas para aproximar mais os jogadores do camisa 9, aumentar a qualidade e a frequência dos cruzamentos e passes na área, criar movimentos que tirem os zagueiros de sua zona de atuação e evitar que Perotti tenha que participar excessivamente longe do gol - explicou o comentarista.
+Perotti, em jogo entre Sport e Juventude, na Ilha do Retiro, pela Série B
+Rafael Vieira/AGIF
+O Sport volta a campo na próxima terça-feira, contra o São Bernardo, na Ilha do Retiro, às 19h30, pela 31ª rodada da Série B do Campeonato Brasileiro.
+O Leão trabalha com um cálculo de cinco vitórias nos sete jogos finais para alcançar a pontuação que, em tese, garante uma vaga no G-6.
+Assista: tudo sobre o Sport no ge, na Globo e no.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Rádio Observador</span>
-                        <span>há 1 dia</span>
+                        <span class="truncate max-w-[150px]">GE Esportes</span>
+                        <span>há 50 min</span>
                     </div>
                 </article>
             
-                <article class="group flex flex-col justify-between" data-article-id="7">
-                    <a href="./noticia/abrir/7/index.html" class="block space-y-3">
+                <article class="group flex flex-col justify-between" data-article-id="981">
+                    <a href="./noticia/abrir/981/index.html" class="block space-y-3">
                         <!-- Capa -->
                         <div class="aspect-16/10 rounded-xl overflow-hidden bg-neutral-100">
-                            <img src="https://veja.abril.com.br/wp-content/uploads/2026/10/03.png?quality=70&amp;strip=info&amp;resize=1200,630&amp;crop=1"
-                                 alt="‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia"
+                            <img src="https://s2-ge.glbimg.com/dnWDoy4a9xLsobvFaUS7sbPjBEI=/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2026/M/o/LPaZfCT4WGqpTfG1Jyhw/botafogo.jpg"
+                                 alt="Botafogo usa Ziyech para internacionalizar marca e projeta entrada no mercado do Marrocos"
                                  onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'"
                                  class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         </div>
 
                         <!-- Categoria -->
                         <div class="text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                            entretenimento
+                            esportes
                         </div>
 
                         <!-- Título -->
                         <h3 class="font-serif text-lg font-semibold leading-snug text-neutral-900 group-hover:text-blue-700 transition line-clamp-2">
-                            ‘Proposta ousada’: criador da Galinha Pintadinha fala a VEJA sobre primeiro filme da franquia
+                            Botafogo usa Ziyech para internacionalizar marca e projeta entrada no mercado do Marrocos
                         </h3>
 
                         <!-- Descrição -->
                         
                             <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
-                                Marcos Luporini revela bastidores do processo de encontrar uma voz para a personagem Popó em adaptação para o cinema
+                                Ziyech é apresentado à torcida do Botafogo
+A chegada de Hakim Ziyech no Botafogo não foi tratada apenas como uma contratação para o campo. Nos bastidores, o clube enxergou no meia marroquino algo que poucos reforços são capazes de oferecer: a chance de abrir um mercado inteiro de uma vez.
+O planejamento interno do Botafogo partiu de um dado simples: Ziyech é ídolo no Marrocos. O meia foi um dos rostos da campanha histórica da seleção marroquina na Copa do Mundo de 2022, quando o país chegou à semifinal. Esse peso fez o anúncio da contratação repercutir muito além do Brasil.
+Camisa de Ziyech no vestiário do Botafogo antes de duelo com Mirassol
+Vitor Silva / Botafogo
+O clube decidiu não deixar esse movimento passar como um pico isolado. A partir da repercussão inicial, o Botafogo montou uma operação com um plano de comunicação, branding e marketing, tendo como objetivo principal internacionalizar a marca.
+O resultado apareceu rápido. Entre 7 e 30 de setembro, as redes sociais alvinegras ganharam mais de 300 mil seguidores. Mais de 262 mil deles vieram do Marrocos. Foram 64 milhões de impressões em 127 publicações relacionadas a Ziyech, além de 34 milhões de visualizações em vídeos.
+O Botafogo transformou a repercussão espontânea da grande contratação em plano estruturado. O clube montou uma estratégia que incluiu distribuição digital, geolocalização, produção audiovisual e ação comercial. Houve, inclusive, uma lançamento de uma coleção especial de camisetas com a Reserva Ink.
+Hakim Ziyech, do Botafogo, em partida contra o Bragantino, pelo Campeonato Brasileiro.
+Fabio Giannelli/AGIF
+Na semana passada, estreou uma produção inédita na Botafogo TV: &#34;Ziyech: A Estrela do Marrocos&#34;, que conta detalhes exclusivos da chegada do jogador. Foram quase 40 mil visualizações nas primeiras 24 horas.
+Agora, o clube monta um planejamento para consolidar o público marroquino. Entre as frentes futuras estão a produção de conteúdos recorrentes voltados ao público marroquino, aliados a exploração de elementos culturais e históricos que aproximem Marrocos e Botafogo, além da criação de formatos que apresentem o clube, sua história, seus ídolos, sua torcida e o Rio de Janeiro a essa nova audiência.
++ ✅Clique aqui para seguir o canal ge Botafogo no WhatsApp
+🗞️ Leia mais notícias do Botafogo
+🎧 Ouça o podcast ge Botafogo 🎧
+Assista: tudo sobre o Botafogo no ge, na Globo e no.
                             </p>
                         
                     </a>
 
                     <!-- Rodapé do Card: Autor e Data -->
                     <div class="pt-3 border-t border-neutral-100 mt-4 flex items-center justify-between text-[11px] text-neutral-400">
-                        <span class="truncate max-w-[150px]">Beatriz Haddad</span>
-                        <span>há 1 dia</span>
+                        <span class="truncate max-w-[150px]">GE Esportes</span>
+                        <span>há 50 min</span>
                     </div>
                 </article>
             

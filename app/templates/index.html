@@ -11,7 +11,7 @@
 
     <!-- Busca Minimalista -->
     <div class="flex items-center justify-between border-b border-neutral-200 pb-4">
-        <h1 class="text-xs uppercase tracking-widest font-semibold text-neutral-400">
+        <h1 id="feedCategoryTitle" class="text-xs uppercase tracking-widest font-semibold text-neutral-400">
             {% if current_category and current_category != 'todas' %}
                 {{ current_category }}
             {% else %}
@@ -34,39 +34,40 @@
         </form>
     </div>
 
-    {% if articles %}
-        <!-- Matéria Principal em Destaque (Primeira Notícia) -->
-        {% set featured = articles[0] %}
-        <section class="border-b border-neutral-200 pb-10">
-            <a href="{{ url_for('news.open_by_id', article_id=featured.id) }}" class="group block">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    <!-- Capa Principal -->
-                    <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
-                        <img src="{{ featured.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80' }}"
-                             alt="{{ featured.title }}"
-                             onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
-                             class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
-                    </div>
-                    <!-- Conteúdo Principal -->
-                    <div class="lg:col-span-5 space-y-3">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
-                            {{ featured.category }}
-                        </span>
-                        <h2 class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
-                            {{ featured.title }}
-                        </h2>
-                        <p class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
-                            {{ featured.description or '' }}
-                        </p>
-                        <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
-                            <span>{{ featured.author or 'Redação Explore' }}</span>
-                            <span>•</span>
-                            <span>{{ featured.published_at|time_ago }}</span>
-                        </div>
+    <!-- Matéria Principal em Destaque (Destaque Exclusivo da Categoria) -->
+    {% set featured = articles[0] if articles else None %}
+    <section id="heroSection" class="border-b border-neutral-200 pb-10 {% if not featured %}hidden{% endif %}">
+        <a id="heroLink" href="{{ url_for('news.open_by_id', article_id=featured.id) if featured else '#' }}" class="group block">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <!-- Capa Principal -->
+                <div class="lg:col-span-7 overflow-hidden rounded-2xl bg-neutral-100 aspect-16/10">
+                    <img id="heroImage" src="{{ (featured.image_url if featured else None) or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80' }}"
+                         alt="{{ featured.title if featured else '' }}"
+                         onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=80'"
+                         class="w-full h-full object-cover group-hover:scale-103 transition duration-500">
+                </div>
+                <!-- Conteúdo Principal -->
+                <div class="lg:col-span-5 space-y-3">
+                    <span id="heroCategory" class="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                        {{ featured.category if featured else '' }}
+                    </span>
+                    <h2 id="heroTitle" class="font-serif text-2xl sm:text-3xl font-semibold leading-snug text-neutral-950 group-hover:text-neutral-700 transition">
+                        {{ featured.title if featured else '' }}
+                    </h2>
+                    <p id="heroDescription" class="text-sm text-neutral-600 line-clamp-3 leading-relaxed">
+                        {{ (featured.clean_description if featured else None) or (featured.description if featured else '') or '' }}
+                    </p>
+                    <div class="pt-2 flex items-center text-xs text-neutral-400 space-x-2">
+                        <span id="heroAuthor">{{ (featured.author or featured.source_name or 'Redação Explore') if featured else '' }}</span>
+                        <span>•</span>
+                        <span id="heroTime">{{ (featured.published_at|time_ago) if featured else '' }}</span>
                     </div>
                 </div>
-            </a>
-        </section>
+            </div>
+        </a>
+    </section>
+
+    {% if articles %}
 
         <!-- Grade de Notícias (Rolagem Infinita) -->
         <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">

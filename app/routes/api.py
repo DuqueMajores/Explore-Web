@@ -109,14 +109,36 @@ def get_articles_feed():
             current_app.logger.warning(f"Auto-fetch NewsAPI no scroll: {e}")
 
     items = []
+    seen_titles = set()
+    seen_urls = set()
+    seen_images = set()
+
     for a in articles:
+        clean_u = NewsArticle.clean_url(a.original_url) if hasattr(NewsArticle, 'clean_url') else a.original_url
+        norm_t = (a.title or '').strip().lower()
+        if clean_u in seen_urls or norm_t in seen_titles:
+            continue
+        seen_urls.add(clean_u)
+        seen_titles.add(norm_t)
+
+        current_img = a.image_url or ''
+        if not current_img or current_img in seen_images or 'photo-1504711434969-e33886168f5c' in current_img:
+            cover_img = NewsArticle.get_diverse_cover(a.category, seed=f"{a.id}-{a.title}")
+        else:
+            cover_img = current_img
+        seen_images.add(cover_img)
+
+        slug = a.page.slug if a.page else f"noticia-{a.id}"
         items.append({
             'id': a.id,
+            'slug': slug,
             'title': a.title,
             'category': a.category,
             'author': a.author or a.source_name or 'Explore',
             'description': a.description or '',
-            'image_url': a.image_url or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80',
+            'clean_description': a.clean_description,
+            'short_summary': a.short_summary,
+            'image_url': cover_img,
             'time_ago': format_time_ago(a.published_at),
             'open_url': url_for('news.open_by_id', article_id=a.id)
         })

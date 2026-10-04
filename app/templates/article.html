@@ -62,24 +62,20 @@
              class="w-full h-full object-cover">
     </div>
 
-    <!-- Lead / Resumo Curto -->
-    {% if article.description %}
+    <!-- Lead / Resumo Curto Higienizado (sem cortes abruptos) -->
+    {% if article.clean_description %}
         <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
             <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
-                {{ article.description }}
+                {{ article.clean_description }}
             </p>
         </div>
     {% endif %}
 
-    <!-- Matéria Completa com Múltiplos Parágrafos Enriquecidos -->
+    <!-- Matéria Completa com Múltiplos Parágrafos Enriquecidos (sem repetições ou textos quebrados) -->
     <div class="font-serif text-lg leading-relaxed text-neutral-800 space-y-6 pt-2">
         {% set paragraphs = article.get_reading_paragraphs() %}
         {% for p in paragraphs %}
-            {% if loop.index == 1 and p == article.description %}
-                {# O lead já foi destacado acima #}
-            {% else %}
-                <p class="text-neutral-800 text-[18px] leading-[1.8]">{{ p }}</p>
-            {% endif %}
+            <p class="text-neutral-800 text-[18px] leading-[1.8]">{{ p }}</p>
         {% endfor %}
     </div>
 

@@ -229,8 +229,14 @@ class NewsService:
                 if not title or not original_url or '[Removed]' in title:
                     continue
 
-                article_hash = NewsArticle.generate_hash(original_url, title)
-                existing = NewsArticle.query.filter_by(article_hash=article_hash).first()
+                clean_orig_url = NewsArticle.clean_url(original_url)
+                article_hash = NewsArticle.generate_hash(clean_orig_url, title)
+                existing = NewsArticle.query.filter(
+                    (NewsArticle.article_hash == article_hash) |
+                    (NewsArticle.original_url == clean_orig_url) |
+                    (NewsArticle.original_url == original_url) |
+                    (NewsArticle.title == title)
+                ).first()
 
                 pub_at = None
                 pub_str = item.get('publishedAt')
@@ -244,13 +250,17 @@ class NewsService:
                 desc = NewsArticle.clean_text(item.get('description') or '')
                 raw_content = NewsArticle.clean_text(item.get('content') or desc)
                 cat = category or classify_text(title, desc, src_name)
+                assigned_img = item.get('urlToImage') or NewsArticle.get_diverse_cover(cat, seed=title)
 
                 if existing:
                     # Atualiza dados se necessário
                     existing.title = title
                     existing.description = desc
                     existing.content = raw_content or existing.content
-                    existing.image_url = item.get('urlToImage') or existing.image_url
+                    if item.get('urlToImage'):
+                        existing.image_url = item.get('urlToImage')
+                    elif not existing.image_url:
+                        existing.image_url = assigned_img
                     existing.category = cat
                 else:
                     new_art = NewsArticle(
@@ -259,8 +269,8 @@ class NewsService:
                         author=item.get('author') or 'Redação',
                         description=desc,
                         content=raw_content,
-                        original_url=original_url,
-                        image_url=item.get('urlToImage') or 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80',
+                        original_url=clean_orig_url,
+                        image_url=assigned_img,
                         source_name=src_name,
                         category=cat,
                         published_at=pub_at or datetime.now(timezone.utc)
@@ -277,25 +287,143 @@ class NewsService:
             count = self.seed_initial_articles()
             return count, f"Falha na conexão com NewsAPI ({str(e)}). Carregadas notícias locais do SQLite."
 
+    G1_RSS_FEEDS = {
+        'geral': 'https://g1.globo.com/rss/g1/',
+        'tecnologia': 'https://g1.globo.com/rss/g1/tecnologia/',
+        'negocios': 'https://g1.globo.com/rss/g1/economia/',
+        'ciencia': 'https://g1.globo.com/rss/g1/ciencia-e-saude/',
+        'saude': 'https://g1.globo.com/rss/g1/ciencia-e-saude/',
+        'entretenimento': 'https://g1.globo.com/rss/g1/pop-arte/',
+        'esportes': 'https://ge.globo.com/rss/ge/'
+    }
+
+    def fetch_and_store_from_rss(self, category: Optional[str] = None) -> Tuple[int, str]:
+        """
+        Coleta notícias em tempo real diretamente dos feeds RSS oficiais em português
+        (G1 Globo / GE Esportes), garantindo atualização contínua, sem limites de cota
+        e matérias 100% categorizadas para cada seção do Explore.
+        """
+        import xml.etree.ElementTree as ET
+        import re
+        from email.utils import parsedate_to_datetime
+
+        cat_key = (category or 'geral').lower()
+        rss_url = self.G1_RSS_FEEDS.get(cat_key, 'https://g1.globo.com/rss/g1/')
+
+        try:
+            resp = requests.get(rss_url, headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}, timeout=8)
+            if resp.status_code != 200:
+                return 0, f"RSS HTTP {resp.status_code}"
+
+            root = ET.fromstring(resp.content)
+            items = root.findall('.//item')
+            saved_count = 0
+
+            for item in items:
+                title_el = item.find('title')
+                link_el = item.find('link')
+                desc_el = item.find('description')
+                pub_el = item.find('pubDate')
+
+                title = title_el.text.strip() if title_el is not None and title_el.text else ''
+                original_url = link_el.text.strip() if link_el is not None and link_el.text else ''
+
+                if not title or not original_url:
+                    continue
+
+                # Extrai capa em alta resolução do item
+                img_url = None
+                for child in item:
+                    if 'content' in child.tag and 'url' in child.attrib:
+                        img_url = child.attrib['url']
+                        break
+                if not img_url and desc_el is not None and desc_el.text:
+                    m = re.search(r'<img[^>]+src=[\"\']([^\"\']+)[\"\']', desc_el.text)
+                    if m:
+                        img_url = m.group(1)
+
+                # Limpa descrição
+                raw_desc = desc_el.text if desc_el is not None and desc_el.text else ''
+                clean_desc = NewsArticle.clean_text(raw_desc)
+
+                pub_at = None
+                if pub_el is not None and pub_el.text:
+                    try:
+                        pub_dt = parsedate_to_datetime(pub_el.text)
+                        if pub_dt.tzinfo is None:
+                            pub_at = pub_dt.replace(tzinfo=timezone.utc)
+                        else:
+                            pub_at = pub_dt.astimezone(timezone.utc)
+                    except Exception:
+                        pub_at = None
+
+                clean_orig_url = NewsArticle.clean_url(original_url)
+                article_hash = NewsArticle.generate_hash(clean_orig_url, title)
+                existing = NewsArticle.query.filter(
+                    (NewsArticle.article_hash == article_hash) |
+                    (NewsArticle.original_url == clean_orig_url) |
+                    (NewsArticle.original_url == original_url) |
+                    (NewsArticle.title == title)
+                ).first()
+
+                src_name = 'GE Esportes' if cat_key == 'esportes' else 'G1 Globo'
+                assigned_img = img_url or NewsArticle.get_diverse_cover(cat_key, seed=title)
+
+                if existing:
+                    existing.title = title
+                    existing.description = clean_desc or existing.description
+                    if img_url:
+                        existing.image_url = img_url
+                    elif not existing.image_url:
+                        existing.image_url = assigned_img
+                    existing.category = cat_key
+                else:
+                    new_art = NewsArticle(
+                        article_hash=article_hash,
+                        title=title,
+                        author=src_name,
+                        description=clean_desc,
+                        content=clean_desc,
+                        original_url=clean_orig_url,
+                        image_url=assigned_img,
+                        source_name=src_name,
+                        category=cat_key,
+                        published_at=pub_at or datetime.now(timezone.utc)
+                    )
+                    db.session.add(new_art)
+                    saved_count += 1
+
+            db.session.commit()
+            return saved_count, f"{saved_count} matérias atualizadas via RSS na categoria {cat_key}."
+        except Exception as e:
+            db.session.rollback()
+            logger.warning(f"Erro ao buscar RSS para {cat_key}: {e}")
+            return 0, str(e)
+
     def sync_all_categories(self) -> Tuple[int, str]:
         """
-        Sincroniza múltiplos lotes de notícias de todas as categorias na NewsAPI,
-        maximizando o volume total de matérias disponíveis no Explore.
+        Sincroniza múltiplos lotes de notícias de todas as categorias tanto via
+        RSS em tempo real quanto via NewsAPI, garantindo atualização instantânea 24/7.
         """
         categories = ['geral', 'tecnologia', 'negocios', 'ciencia', 'saude', 'esportes', 'entretenimento']
         total_saved = 0
+
+        # 1. Sincroniza via RSS (em tempo real, zero limites de cota)
         for cat in categories:
             try:
-                saved, _ = self.fetch_and_store_from_api(category=cat)
-                total_saved += saved
+                saved_rss, _ = self.fetch_and_store_from_rss(category=cat)
+                total_saved += saved_rss
             except Exception as ex:
-                logger.warning(f"Erro ao sincronizar categoria {cat}: {ex}")
+                logger.warning(f"Erro RSS na categoria {cat}: {ex}")
 
-        try:
-            saved_ev, _ = self.fetch_and_store_from_api(query='Brasil mercado tecnologia inovação')
-            total_saved += saved_ev
-        except Exception:
-            pass
+        # 2. Sincroniza via NewsAPI se chave disponível
+        if self.api_key and self.api_key != 'sua_chave_newsapi_aqui':
+            for cat in categories:
+                try:
+                    saved, _ = self.fetch_and_store_from_api(category=cat)
+                    total_saved += saved
+                except Exception as ex:
+                    logger.warning(f"Erro NewsAPI na categoria {cat}: {ex}")
 
         return total_saved, f"{total_saved} matérias sincronizadas com sucesso em todas as categorias."
 
