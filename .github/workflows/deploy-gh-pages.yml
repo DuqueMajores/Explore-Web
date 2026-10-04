@@ -6,8 +6,9 @@ on:
       - main
       - master
   schedule:
-    # Reconstrói o catálogo estático periodicamente, mesmo sem novos commits.
-    - cron: '*/15 * * * *'
+    # Horários deslocados evitam a janela de maior congestionamento do GitHub.
+    # Atualiza aproximadamente a cada 15 minutos, mesmo sem novos commits.
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
