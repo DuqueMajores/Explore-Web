@@ -63,10 +63,10 @@
     </div>
 
     <!-- Lead / Resumo Curto Higienizado (sem cortes abruptos) -->
-    {% if article.clean_description %}
+    {% if article.short_summary or article.clean_description %}
         <div class="p-6 bg-neutral-50 rounded-2xl border-l-4 border-blue-600">
-            <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic">
-                {{ article.clean_description }}
+            <p class="font-serif text-lg sm:text-xl text-neutral-800 leading-relaxed font-normal italic break-words max-h-36 overflow-hidden">
+                {{ article.short_summary or article.clean_description }}
             </p>
         </div>
     {% endif %}
