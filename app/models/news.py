@@ -265,9 +265,8 @@ class NewsArticle(db.Model):
 
     def get_reading_paragraphs(self) -> list[str]:
         """
-        Retorna múltiplos parágrafos ricos e completos para a leitura da matéria.
-        Garante que parágrafos duplicados do lead (resumo), fragmentos quebrados de scraping
-        ou conteúdos corrompidos sejam rigorosamente eliminados.
+        Retorna somente parágrafos presentes no conteúdo real recebido da fonte.
+        Nunca completa uma notícia com texto editorial inventado ou reutilizado.
         """
         import unicodedata
         import re
@@ -292,84 +291,22 @@ class NewsArticle(db.Model):
                 return False
             return (len(intersection) / smaller) > 0.60
 
-        # Se houver conteúdo real do artigo no banco
+        # Usa os parágrafos reais do conteúdo, quando a fonte os fornece.
         if clean_raw:
             parts = [p.strip() for p in clean_raw.split('\n') if len(p.strip()) > 35]
             for part in parts:
                 cleaned_part = self.clean_text(part)
-                # Verifica se não é duplicata do lead e nem de parágrafo já existente
-                if len(cleaned_part) > 40 and not is_duplicate(cleaned_part, clean_desc):
+                if len(cleaned_part) > 40:
                     if not any(is_duplicate(cleaned_part, existing) for existing in paragraphs):
-                        # Evita fragmentos em caixa baixa total sem pontuação (típico de scraping corrompido)
                         if cleaned_part[0].isupper() or any(c in '.!?' for c in cleaned_part[-2:]):
                             paragraphs.append(cleaned_part)
 
-        # Se o artigo tiver menos de 4 parágrafos substanciais, complementa com análise editorial estruturada
-        if len(paragraphs) < 4:
-            cat = (self.category or 'geral').lower()
-            source = self.source_name or 'agências de notícias internacionais'
-            title = self.title
-
-            if 'tecnologia' in cat or 'ia' in title.lower():
-                p1 = (
-                    f"Especialistas do setor destacam que os avanços relacionados a '{title}' refletem um ciclo de rápida "
-                    f"maturação tecnológica. Engenheiros e analistas ressaltam que o aumento na capacidade computacional "
-                    f"e a integração de modelos eficientes têm permitido resolver gargalos históricos em processamento, "
-                    f"trazendo ganhos de produtividade e impulsionando novas arquiteturas digitais."
-                )
-            elif 'negocios' in cat or 'economia' in cat or 'mercado' in title.lower():
-                p1 = (
-                    f"No âmbito econômico, a repercussão de '{title}' mobilizou mesas de operação e consultorias financeiras. "
-                    f"O movimento evidencia o reposicionamento estratégico dos principais agentes diante das oscilações da taxa "
-                    f"de juros e da volatilidade cambial, consolidando operações voltadas para liquidez e proteção patrimonial."
-                )
-            elif 'ciencia' in cat or 'saude' in cat:
-                p1 = (
-                    f"Pesquisadores envolvidos enfatizam que a metodologia e os dados observados fornecem subsídios "
-                    f"fundamentais para novas investigações na área. A validação desses resultados por pares fortalece "
-                    f"a confiança científica e abre precedentes para aplicações práticas que podem beneficiar tanto a "
-                    f"comunidade acadêmica quanto a população em geral."
-                )
-            elif 'esportes' in cat:
-                p1 = (
-                    f"No cenário esportivo, o desempenho e as estratégias em torno de '{title}' movimentaram comissões técnicas "
-                    f"e analistas de desempenho. A preparação física intensiva aliada a ajustes táticos demonstra a busca constante "
-                    f"por consistência nos momentos decisivos da temporada."
-                )
-            elif 'entretenimento' in cat:
-                p1 = (
-                    f"Nos bastidores culturais, o anúncio gerou ampla repercussão entre fãs e crítica especializada. "
-                    f"A produção promete marcar uma nova fase artística, combinando inovação estética com forte conexão "
-                    f"junto ao público global."
-                )
-            else:
-                p1 = (
-                    f"De acordo com levantamentos preliminares e comunicados oficiais acompanhados por {source}, "
-                    f"o caso ganha relevância expressiva no debate público. A dinâmica recente acelerou a tomada de decisões "
-                    f"entre os órgãos competentes e gerou discussões estratégicas em diferentes esferas da sociedade."
-                )
-            paragraphs.append(p1)
-
-            p2 = (
-                f"Lideranças e analistas independentes avaliam que os desdobramentos diretos devem influenciar as diretrizes "
-                f"do segmento ao longo dos próximos trimestres. A avaliação predominante é de que medidas preventivas e "
-                f"planejamento a médio prazo serão indispensáveis para mitigar riscos e maximizar as oportunidades geradas por esse cenário."
-            )
-            paragraphs.append(p2)
-
-            p3 = (
-                f"Comparado a episódios semelhantes registrados no último ano, observa-se uma maior agilidade na circulação "
-                f"das informações e no alinhamento das expectativas. A convergência entre canais oficiais e veículos especializados "
-                f"reforça a transparência dos fatos relatados e oferece ao público um panorama mais nítido dos acontecimentos."
-            )
-            paragraphs.append(p3)
-
-            p4 = (
-                f"Novas atualizações sobre o tema continuam sendo monitoradas em tempo real. A expectativa é de que novas notas "
-                f"técnicas e pronunciamentos adicionais sejam divulgados nos próximos dias, esclarecendo pontos remanescentes "
-                f"e definindo os rumos das próximas etapas."
-            )
-            paragraphs.append(p4)
+        # RSS e algumas APIs entregam apenas um resumo, sem quebras de linha.
+        # Nesse caso, preserva o resumo real em vez de fabricar parágrafos.
+        if not paragraphs:
+            fallback = clean_raw or clean_desc
+            if fallback and len(fallback) > 20:
+                paragraphs.append(fallback)
 
         return paragraphs
 
