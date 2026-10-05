@@ -84,14 +84,32 @@ def make_relative_article(html: str, prefix: str = '../../') -> str:
             .replace(f'{prefix}static/css/style.css', f'{prefix}static/css/style.css?v={version}')
 
 def make_robust_404(html: str) -> str:
-    """Corrige URLs profundas/duplicadas antes que assets relativos sejam lidos."""
+    """Recupera aliases duplicados e slugs de notícias com IDs antigos."""
     recovery_script = '''<script>
 (function () {
     var path = window.location.pathname || '';
     var match = path.match(/^(.*\\/)noticia\\/(?:noticia\\/)?abrir\\/(\\d+)\\/index\\.html$/);
     if (match) {
         window.location.replace(match[1] + 'noticia/abrir/' + match[2] + '/index.html');
+        return;
     }
+    // Em exportações novas, o ID sequencial de um artigo pode mudar. Use o
+    // título do slug para localizar a URL canônica atual no catálogo estático.
+    match = path.match(/^(.*\\/)noticia\\/([^/]+)\\/index\\.html$/);
+    if (!match) return;
+    var basePath = match[1];
+    var oldTitleSlug = match[2].replace(/-\\d+$/, '');
+    fetch(basePath + 'data/articles.json', { cache: 'no-store' })
+        .then(function (response) { return response.ok ? response.json() : []; })
+        .then(function (articles) {
+            var article = articles.find(function (item) {
+                return String(item.slug || '').replace(/-\\d+$/, '') === oldTitleSlug;
+            });
+            if (article && article.open_url) {
+                window.location.replace(basePath + article.open_url);
+            }
+        })
+        .catch(function () {});
 })();
 </script>'''
     return html.replace('<head>', '<head>' + recovery_script, 1)
