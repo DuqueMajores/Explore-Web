@@ -173,16 +173,14 @@ def export_static_site(output_dir='docs'):
                 f.write(rel_html)
             print("[✓] Raiz /index.html e /404.html sincronizados para compatibilidade de deploy no root.")
 
-        # 4. Prepara catálogo de artigos e gera páginas estáticas das matérias mais recentes
+        # 4. Prepara o catálogo e gera páginas estáticas para todas as matérias.
         articles_data = []
         rendered_count = 0
 
-        for idx, a in enumerate(articles):
-            if idx < 50:
-                page, _ = news_svc.get_or_create_page_for_article(a, reader_id='export-gh-pages')
-                slug = page.slug
-            else:
-                slug = a.page.slug if a.page else f"{slugify(a.title)}-{a.id}"
+        for a in articles:
+            # O feed estático disponibiliza o catálogo completo; toda matéria
+            # exibida precisa ter uma página física para o GitHub Pages servir.
+            slug = a.page.slug if a.page else f"{slugify(a.title)}-{a.id}"
 
             art_dict = {
                 'id': a.id,
@@ -199,26 +197,25 @@ def export_static_site(output_dir='docs'):
             }
             articles_data.append(art_dict)
 
-            # Exporta página estática individual dos primeiros 50 artigos mais recentes
-            if idx < 50:
-                slug_dir = os.path.join(output_dir, 'noticia', slug)
-                os.makedirs(slug_dir, exist_ok=True)
-                art_resp = client.get(f'/noticia/{slug}')
-                if art_resp.status_code == 200:
-                    art_html = make_relative_article(art_resp.data.decode('utf-8'))
-                    with open(os.path.join(slug_dir, 'index.html'), 'w', encoding='utf-8') as f:
-                        f.write(art_html)
-                    rendered_count += 1
+            # Pré-renderiza todas as matérias: categorias também exibem notícias
+            # mais antigas, que antes eram listadas sem um HTML publicado.
+            slug_dir = os.path.join(output_dir, 'noticia', slug)
+            os.makedirs(slug_dir, exist_ok=True)
+            art_resp = client.get(f'/noticia/{slug}')
+            if art_resp.status_code == 200:
+                art_html = make_relative_article(art_resp.data.decode('utf-8'))
+                with open(os.path.join(slug_dir, 'index.html'), 'w', encoding='utf-8') as f:
+                    f.write(art_html)
+                rendered_count += 1
 
-                # Cria alias por ID: docs/noticia/abrir/<id>/index.html
+                # Cria alias por ID: docs/noticia/abrir/<id>/index.html.
                 id_dir = os.path.join(output_dir, 'noticia', 'abrir', str(a.id))
                 os.makedirs(id_dir, exist_ok=True)
-                if art_resp.status_code == 200:
-                    # O alias /noticia/abrir/<id>/ tem um nível extra em
-                    # relação a /noticia/<slug>/ e precisa de ../../../.
-                    alias_html = make_relative_article(art_resp.data.decode('utf-8'), prefix='../../../')
-                    with open(os.path.join(id_dir, 'index.html'), 'w', encoding='utf-8') as f:
-                        f.write(alias_html)
+                # O alias /noticia/abrir/<id>/ tem um nível extra em relação
+                # a /noticia/<slug>/ e precisa de ../../../.
+                alias_html = make_relative_article(art_resp.data.decode('utf-8'), prefix='../../../')
+                with open(os.path.join(id_dir, 'index.html'), 'w', encoding='utf-8') as f:
+                    f.write(alias_html)
 
         # Salva docs/data/articles.json e copia para /data/articles.json
         data_json_path = os.path.join(output_dir, 'data', 'articles.json')
