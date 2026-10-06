@@ -16,13 +16,12 @@ def app():
         db.session.remove()
         db.drop_all()
 
-def test_cleanup_5_days_rule(app):
+def test_cleanup_keeps_static_pages_permanently(app):
     """
-    Testa se uma página com mais de 5 dias sem acesso é removida do SQLite,
-    enquanto a página recente permanece ativa.
+    Páginas sem acesso há mais de cinco dias e seus logs não são removidos.
     """
     with app.app_context():
-        # Cria matéria 1 (que ficará expirada)
+        # Cria matéria 1 (cuja página continuará salva mesmo sem acesso recente).
         art_expired = NewsArticle(
             article_hash='hash_exp',
             title='Materia Antiga Expirada',
@@ -39,7 +38,7 @@ def test_cleanup_5_days_rule(app):
         db.session.add_all([art_expired, art_active])
         db.session.commit()
 
-        # Página 1 com último acesso há 6 dias (deve ser excluída)
+        # Página 1 com último acesso há 6 dias permanece permanente.
         page1 = ArticlePage.create_for_article(art_expired)
         page1.last_accessed_at = datetime.now(timezone.utc) - timedelta(days=6)
 
@@ -61,19 +60,19 @@ def test_cleanup_5_days_rule(app):
         page1_id = page1.id
         page2_id = page2.id
 
-        # Executa rotina de limpeza automática
+        # A rotina de auditoria é compatível, mas não apaga páginas estáticas.
         checked, deleted, msg = clean_expired_pages(app, execution_type='test')
 
         assert checked == 2
-        assert deleted == 1
+        assert deleted == 0
 
-        # Página 1 deve ter sido removida do SQLite
-        assert ArticlePage.query.filter_by(id=page1_id).first() is None
-        # Registros auxiliares de log da página 1 devem ter sido removidos em cascata
-        assert AccessLog.query.filter_by(page_id=page1_id).first() is None
+        # Página 1 e seus registros auxiliares continuam intactos.
+        assert ArticlePage.query.filter_by(id=page1_id).first() is not None
+        assert AccessLog.query.filter_by(page_id=page1_id).first() is not None
 
         # Página 2 deve continuar intacta no SQLite
         assert ArticlePage.query.filter_by(id=page2_id).first() is not None
+        assert 'nenhuma removida' in msg
 
         # As matérias base continuam preservadas em news_articles
         assert NewsArticle.query.filter_by(id=art_expired.id).first() is not None

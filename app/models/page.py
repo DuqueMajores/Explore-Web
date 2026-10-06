@@ -16,11 +16,8 @@ def slugify(text: str) -> str:
 
 class ArticlePage(db.Model):
     """
-    Representa a página interna de uma notícia armazenada no SQLite.
-    Não é um arquivo HTML físico em disco: sua existência e URL dinâmica
-    são controladas por este registro no banco de dados SQLite.
-    Caso seja excluída por falta de acessos (5 dias), será recriada automaticamente
-    quando um leitor clicar novamente no card da notícia.
+    Mantém metadados de acesso de uma página cuja cópia HTML é gravada em disco
+    no primeiro acesso e permanece independente dos registros de atividade.
     """
     __tablename__ = 'article_pages'
 
@@ -78,10 +75,6 @@ class ArticlePage(db.Model):
             last_acc = last_acc.replace(tzinfo=timezone.utc)
         diff = now - last_acc
         return diff.total_seconds() / 86400.0
-
-    def is_expired(self, max_days: int = 5) -> bool:
-        """Determina se a página completou 5 dias consecutivos sem nenhum acesso."""
-        return self.days_since_last_access() >= max_days
 
     def to_dict(self):
         return {

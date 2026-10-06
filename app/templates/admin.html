@@ -10,17 +10,17 @@
         <div>
             <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight flex items-center">
                 <i class="fa-solid fa-database text-brand-600 mr-2.5"></i>
-                Painel do Banco SQLite & Regra dos 5 Dias
+                Painel do Banco SQLite & Páginas Permanentes
             </h1>
             <p class="text-xs text-slate-500 mt-1">
-                Monitoramento do banco local baseado em arquivo, expiração automática e recriação dinâmica.
+                Monitoramento do SQLite e dos arquivos HTML gerados no primeiro acesso.
             </p>
         </div>
         <div class="flex items-center space-x-2">
-            <!-- Botão de Limpeza Manual -->
+            <!-- Auditoria manual sem exclusão -->
             <form action="{{ url_for('admin.trigger_cleanup') }}" method="POST" class="inline">
                 <button type="submit" class="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold bg-rose-600 text-white hover:bg-rose-700 shadow-sm transition">
-                    <i class="fa-solid fa-broom mr-1.5"></i> Executar Limpeza dos 5 Dias
+                    <i class="fa-solid fa-circle-check mr-1.5"></i> Verificar Páginas
                 </button>
             </form>
             <a href="{{ url_for('admin.backups') }}" class="inline-flex items-center px-3.5 py-2 rounded-lg text-xs font-semibold bg-slate-800 text-white hover:bg-slate-900 shadow-sm transition">
@@ -87,7 +87,7 @@
                 </p>
             </div>
             <div class="mt-3 pt-3 border-t border-slate-100 text-[11px] text-amber-700 font-medium">
-                Expiração: {{ expiration_days }} dias sem acesso
+                Retenção: permanente
             </div>
         </div>
 
@@ -139,25 +139,25 @@
                     <i class="fa-brands fa-github mr-1.5"></i> Por que NÃO funciona no GitHub Pages?
                 </h3>
                 <p class="text-slate-300">
-                    O GitHub Pages fornece apenas hospedagem de arquivos estáticos (HTML/CSS/JS). Ele <strong>não executa processos Python/Flask</strong> nem oferece sistema de arquivos com escrita persistente. Por isso, a aplicação requer um servidor real (Docker/VPS/Render com volume de disco) para reter o arquivo SQLite.
+                    O GitHub Pages fornece apenas hospedagem de arquivos estáticos (HTML/CSS/JS). Para gerar páginas no primeiro acesso, use um servidor Flask e mantenha o SQLite e <code>{{ static_articles_dir }}</code> em armazenamento persistente.
                 </p>
             </div>
         </div>
     </div>
 
-    <!-- Tabela de Páginas Internas e Teste de Exclusão -->
+    <!-- Páginas internas permanentes -->
     <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
                 <h2 class="text-base font-bold text-slate-900">
-                    Páginas no SQLite & Status de Inatividade
+                    Páginas HTML permanentes
                 </h2>
                 <p class="text-xs text-slate-500 mt-0.5">
-                    Páginas com mais de 5 dias sem acesso são removidas pela rotina de limpeza e recriadas ao receber novo clique.
+                    O primeiro acesso cria um arquivo HTML no diretório <code>{{ static_articles_dir }}</code>; a manutenção nunca o apaga por inatividade.
                 </p>
             </div>
             <span class="text-xs text-slate-500 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200 font-medium">
-                Regra: <strong>5 dias (120h)</strong> sem acesso = Exclusão automática
+                <strong>Sem prazo de expiração</strong>
             </span>
         </div>
 
@@ -169,14 +169,12 @@
                             <th class="py-3 px-4">Página</th>
                             <th class="py-3 px-4">Matéria Associada</th>
                             <th class="py-3 px-4">Último Acesso (UTC)</th>
-                            <th class="py-3 px-4">Tempo sem Acesso</th>
                             <th class="py-3 px-4">Status</th>
-                            <th class="py-3 px-4 text-right">Ação de Teste</th>
+                            <th class="py-3 px-4 text-right">Ação</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 font-medium">
                         {% for p in pages %}
-                            {% set days = p.days_since_last_access() %}
                             <tr class="hover:bg-slate-50/70 transition">
                                 <td class="py-3 px-4">
                                     <div class="font-bold text-slate-800">#{{ p.id }}</div>
@@ -194,40 +192,13 @@
                                 <td class="py-3 px-4 text-slate-600 font-mono text-[11px]">
                                     {{ p.last_accessed_at|datetime_format }}
                                 </td>
-                                <td class="py-3 px-4 font-mono">
-                                    {% if days < 1 %}
-                                        <span class="text-emerald-600 font-bold">{{ (days * 24)|round(1) }} horas</span>
-                                    {% else %}
-                                        <span class="{% if days >= 5 %}text-rose-600 font-bold{% elif days >= 4 %}text-amber-600 font-bold{% else %}text-slate-700{% endif %}">
-                                            {{ days|round(2) }} dias
-                                        </span>
-                                    {% endif %}
-                                </td>
                                 <td class="py-3 px-4">
-                                    {% if days >= 5 %}
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">
-                                            <i class="fa-solid fa-triangle-exclamation mr-1"></i> Expirada (&ge; 5 dias)
-                                        </span>
-                                    {% elif days >= 4 %}
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
-                                            <i class="fa-solid fa-clock mr-1"></i> Quase expirando
-                                        </span>
-                                    {% else %}
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                                            <i class="fa-solid fa-circle-check mr-1"></i> Ativa
-                                        </span>
-                                    {% endif %}
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                        <i class="fa-solid fa-circle-check mr-1"></i> Permanente
+                                    </span>
                                 </td>
                                 <td class="py-3 px-4 text-right">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <!-- Botão para simular 5 dias sem acesso -->
-                                        <form action="{{ url_for('admin.age_page', page_id=p.id) }}" method="POST" class="inline">
-                                            <input type="hidden" name="dias" value="6">
-                                            <button type="submit" title="Simular que a página ficou 6 dias sem nenhum acesso"
-                                                    class="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-semibold bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 transition">
-                                                <i class="fa-solid fa-forward-fast mr-1 text-amber-600"></i> Simular +6 dias
-                                            </button>
-                                        </form>
                                         <a href="{{ url_for('news.view_article_by_slug', slug=p.slug) }}" target="_blank"
                                            class="inline-flex items-center px-2.5 py-1 rounded text-[11px] font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
                                             <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -253,7 +224,7 @@
                 Histórico de Manutenção do SQLite (Auditoria)
             </h2>
             <p class="text-xs text-slate-500 mt-0.5">
-                Registros das tarefas periódicas que examinam as páginas e removem as inativas há mais de 5 dias.
+                Registros das verificações periódicas. Páginas estáticas e seus metadados não são removidos por inatividade.
             </p>
         </div>
 
@@ -265,7 +236,7 @@
                             <th class="py-3 px-4">Data de Execução (UTC)</th>
                             <th class="py-3 px-4">Tipo</th>
                             <th class="py-3 px-4">Páginas Verificadas</th>
-                            <th class="py-3 px-4">Excluídas (&ge;5 dias)</th>
+                            <th class="py-3 px-4">Páginas excluídas</th>
                             <th class="py-3 px-4">Detalhes</th>
                         </tr>
                     </thead>

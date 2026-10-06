@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 class MaintenanceScheduler:
     """
-    Agendador em segundo plano baseado em thread dedicada.
-    Executa a rotina de limpeza periódica no SQLite sem requerer Redis, Celery ou serviços em nuvem.
+    Agendador em segundo plano para sincronização de notícias e auditoria das páginas.
+    Não remove páginas estáticas por inatividade.
     """
     def __init__(self, app: Flask = None):
         self.app = app
@@ -49,7 +49,7 @@ class MaintenanceScheduler:
                         count, message = news_svc.sync_all_categories()
                         logger.info("Sincronização concluída: %s (%s novas)", message, count)
 
-                logger.info("Executando ciclo agendado de manutenção e expiração de páginas...")
+                logger.info("Executando auditoria agendada das páginas permanentes...")
                 clean_expired_pages(self.app, execution_type='automatic')
 
             except Exception as e:

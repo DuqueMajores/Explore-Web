@@ -1,9 +1,11 @@
+import os
 import uuid
-from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, flash, make_response, current_app, send_file
 from app.extensions import db
 from app.models.news import NewsArticle
 from app.models.page import ArticlePage
 from app.services.news_service import NewsService
+from app.services.static_pages import persist_static_article, static_article_path
 
 news_bp = Blueprint('news', __name__)
 
@@ -111,17 +113,29 @@ def index():
 def view_article_by_slug(slug):
     """
     Exibe a página interna da notícia.
-    REQUISITO CRUCIAL:
-    1. Verifica se já existe um registro correspondente em 'article_pages' no SQLite.
-    2. Se não existir (ex: foi excluído após 5 dias sem acesso), busca o artigo em 'news_articles'
-       pelo ID ou slug e recria o registro da página automaticamente!
-    3. Registra o acesso do leitor anônimo e atualiza a data do último acesso em UTC.
+    Serve um snapshot HTML existente ou, no primeiro acesso, cria e persiste
+    a página estática associada à matéria.
     """
     cookie_name = current_app.config.get('READER_COOKIE_NAME', 'noticias_reader_id')
     reader_id = request.cookies.get(cookie_name) or str(uuid.uuid4())
     needs_cookie = request.cookies.get(cookie_name) is None
 
-    # Tenta localizar página pelo slug
+    try:
+        static_path = static_article_path(slug, current_app.config['STATIC_ARTICLES_DIR'])
+    except ValueError:
+        flash("Matéria não encontrada.", "error")
+        return redirect(url_for('news.index'))
+
+    # Sirva o arquivo antes de consultar o banco: o snapshot continua acessível
+    # mesmo se os metadados da página ou da matéria deixarem de existir.
+    if os.path.isfile(static_path):
+        response = send_file(static_path, mimetype='text/html', max_age=31536000)
+        if needs_cookie:
+            max_age = current_app.config.get('READER_COOKIE_MAX_AGE', 31536000)
+            response.set_cookie(cookie_name, reader_id, max_age=max_age, httponly=True, samesite='Lax')
+        return response
+
+    # Tenta localizar os metadados antes de criar o primeiro snapshot.
     page = ArticlePage.query.filter_by(slug=slug).first()
     was_recreated = (request.args.get('recriada') == '1')
 
@@ -139,7 +153,7 @@ def view_article_by_slug(slug):
         db.session.add(log)
         db.session.commit()
     else:
-        # A página NÃO EXISTE ou foi EXCLUÍDA pela rotina de limpeza de 5 dias!
+        # Metadados da página ainda não existem; recupera o artigo pelo ID no slug.
         # Extrair o ID do artigo a partir do sufixo do slug (ex: "titulo-da-materia-12")
         article_id = None
         try:
@@ -156,7 +170,7 @@ def view_article_by_slug(slug):
             flash("Matéria não encontrada no banco SQLite local.", "error")
             return redirect(url_for('news.index'))
 
-        # RECRIA AUTOMATICAMENTE A PÁGINA A PARTIR DOS DADOS DO ARTIGO NO SQLITE!
+        # Cria os metadados da página a partir do artigo persistido no SQLite.
         news_svc = NewsService(current_app.config['NEWS_API_KEY'], current_app.config['NEWS_API_BASE_URL'])
         page, was_recreated = news_svc.get_or_create_page_for_article(
             article=article,
@@ -178,14 +192,27 @@ def view_article_by_slug(slug):
         ).order_by(NewsArticle.published_at.desc()).limit(3 - len(similar_articles)).all()
         similar_articles.extend(complement)
 
-    response = make_response(render_template(
+    rendered_html = render_template(
         'article.html',
         article=article,
         page=page,
         was_recreated=was_recreated,
         reader_id=reader_id,
         similar_articles=similar_articles
-    ))
+    )
+
+    # O conteúdo é gravado uma única vez no diretório configurado e a resposta
+    # passa a vir do próprio arquivo HTML, sem depender de renderização posterior.
+    try:
+        static_path = persist_static_article(
+            page.slug,
+            rendered_html,
+            current_app.config['STATIC_ARTICLES_DIR']
+        )
+        response = send_file(static_path, mimetype='text/html', max_age=31536000)
+    except OSError:
+        current_app.logger.exception('Não foi possível gravar o snapshot HTML da matéria %s.', page.slug)
+        response = make_response(rendered_html)
 
     if needs_cookie:
         max_age = current_app.config.get('READER_COOKIE_MAX_AGE', 31536000)

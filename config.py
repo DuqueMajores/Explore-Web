@@ -29,6 +29,9 @@ class Config:
 
     os.makedirs(os.path.dirname(SQLITE_PATH), exist_ok=True)
 
+    # Snapshots HTML permanentes; em produção, aponte para um volume persistente.
+    STATIC_ARTICLES_DIR = os.getenv('STATIC_ARTICLES_DIR', os.path.join(BASE_DIR, 'noticia'))
+
     raw_db_url = os.getenv('DATABASE_URL')
     if raw_db_url:
         if raw_db_url.startswith('sqlite:///') and not raw_db_url.startswith('sqlite:////') and not raw_db_url.startswith('sqlite:///:memory:'):
@@ -53,8 +56,6 @@ class Config:
     NEWS_API_KEY = os.getenv('NEWS_API_KEY', 'dde2b5709e25424c9d31a5ebd0c60287')
     NEWS_API_BASE_URL = 'https://newsapi.org/v2'
     
-    # Política de expiração de páginas sem acesso: 5 dias
-    PAGE_EXPIRATION_DAYS = 5
     CLEANUP_INTERVAL_MINUTES = int(os.getenv('CLEANUP_INTERVAL_MINUTES', '60'))
     # Atualiza o catálogo automaticamente mesmo sem interação do leitor.
     NEWS_SYNC_INTERVAL_MINUTES = int(os.getenv('NEWS_SYNC_INTERVAL_MINUTES', '15'))
