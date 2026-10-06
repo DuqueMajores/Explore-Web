@@ -10,7 +10,7 @@ Sistema completo de publicação e catalogação de notícias desenvolvido em **
 
 - [Visão Geral e Arquitetura](#-visão-geral-e-arquitetura)
 - [Localização e Gestão do Arquivo SQLite](#-localização-e-gestão-do-arquivo-sqlite)
-- [Regra dos 5 Dias: Exclusão e Recriação Automática](#-regra-dos-5-dias-exclusão-e-recriação-automática)
+- [Páginas HTML Estáticas Permanentes](#-páginas-html-estáticas-permanentes)
 - [Multi-Usuário: Servidor vs. Navegador vs. GitHub Pages](#-multi-usuário-servidor-vs-navegador-vs-github-pages)
 - [Sistema de Backup e Restauração Local](#-sistema-de-backup-e-restauração-local)
 - [Estrutura do Projeto](#-estrutura-do-projeto)
@@ -24,12 +24,12 @@ Sistema completo de publicação e catalogação de notícias desenvolvido em **
 
 O sistema consome a API da **NewsAPI** (ou base demonstrativa local em caso de ausência de conexão), cataloga as matérias com identificadores únicos (*hashes* SHA-256) e as organiza em categorias (`tecnologia`, `negócios`, `ciência`, `saúde`, `entretenimento`, `esportes`, `geral`).
 
-### Criação Dinâmica de Páginas (Sem arquivos HTML estáticos físicos)
-- As páginas internas de leitura **não são geradas como arquivos `.html` estáticos no disco rígido**.
-- Uma página interna é representada como um registro na tabela `article_pages` do SQLite.
-- Quando um leitor clica no card de uma notícia, a aplicação Flask verifica se já existe uma página correspondente no SQLite.
-- Caso o registro não exista ou tenha sido removido pela rotina de limpeza, o sistema **recria o registro da página automaticamente** a partir dos dados do artigo em `news_articles`.
-- A URL amigável (`/noticia/<slug>`) continua acessível dinamicamente enquanto o registro persistir no banco.
+### Páginas HTML Estáticas Permanentes
+- No primeiro clique em uma matéria no servidor Flask, a aplicação renderiza e grava `noticia/<slug>/index.html`.
+- A resposta passa a ser servida desse arquivo estático; os metadados e acessos continuam registrados no SQLite.
+- A rotina de manutenção não exclui páginas por falta de acesso. O arquivo HTML permanece acessível mesmo que os metadados do SQLite sejam removidos.
+- Configure `STATIC_ARTICLES_DIR` para um volume persistente em produção. Em hospedagens com disco efêmero, arquivos podem ser perdidos quando o serviço reinicia ou é publicado novamente.
+- O GitHub Pages não executa Flask nem escreve arquivos durante um clique. O exportador gera as páginas durante o build e preserva os snapshots já presentes no repositório entre exportações.
 
 ---
 
@@ -51,16 +51,13 @@ instance/database.sqlite3
 
 ---
 
-## ⏳ Regra dos 5 Dias: Exclusão e Recriação Automática
+## ♾️ Páginas HTML Estáticas Permanentes
 
-Para otimizar o banco de dados e descartar páginas sem interesse recente, o sistema implementa um ciclo contínuo de manutenção:
-
-1. **Timestamps em UTC:** Tanto a data de criação (`created_at`) quanto a data do último acesso (`last_accessed_at`) são registradas rigorosamente em **UTC**, evitando inconsistências causadas por fusos horários ou horário de verão.
-2. **Critério de Exclusão:** Se uma página permanecer por **5 dias consecutivos (120 horas)** sem receber nenhum acesso válido (`last_accessed_at <= UTC_NOW - 5 dias`), a rotina de manutenção remove o registro de `article_pages` e os registros auxiliares de `access_logs` (via deleção em cascata). A notícia base em `news_articles` permanece intacta.
-3. **Recriação Instantânea:** Se qualquer leitor clicar novamente no card dessa matéria após a exclusão, o Flask detecta a ausência do registro e **recria a página de forma transparente**, gerando um novo registro em `article_pages` e iniciando um novo ciclo de 5 dias.
-4. **Execução Automática e Manual:**
-   - **Automática:** Uma thread em segundo plano (`app/tasks/scheduler.py`) executa a rotina `clean_expired_pages()` periodicamente no servidor.
-   - **Manual e Simulação:** No painel de administração (`/admin`), o administrador pode disparar a limpeza a qualquer momento com um clique, bem como utilizar o botão **"Simular +6 dias"** em qualquer página para testar imediatamente o processo de expiração e recriação.
+1. **Primeiro acesso:** O clique cria o metadado da página no SQLite e materializa seu HTML em `STATIC_ARTICLES_DIR/<slug>/index.html`.
+2. **Acessos seguintes:** A aplicação serve o snapshot gravado, sem renderizar novamente o conteúdo da matéria. A URL permanece a mesma (`/noticia/<slug>`).
+3. **Sem expiração:** As rotinas agendadas e manuais apenas registram uma verificação; não removem páginas ou logs por inatividade.
+4. **Armazenamento durável:** O diretório `STATIC_ARTICLES_DIR` deve estar em um volume persistente. O padrão é `noticia/` na raiz do projeto; altere-o pela variável de ambiente para apontar ao volume do servidor.
+5. **GitHub Pages:** Como esse serviço não pode gravar arquivos ao receber um clique, o exportador publica os HTMLs no build e mantém os snapshots já publicados. Novas matérias ficam disponíveis como arquivos estáticos após o próximo export/deploy.
 
 ---
 
@@ -102,27 +99,28 @@ O sistema inclui ferramentas para salvaguardar a base SQLite sem qualquer depend
 │   ├── models/               # Modelos de dados
 │   │   ├── __init__.py
 │   │   ├── news.py           # Tabela news_articles (notícias e hashes SHA-256)
-│   │   ├── page.py           # Tabela article_pages (páginas dinâmicas e último acesso)
+│   │   ├── page.py           # Metadados article_pages e último acesso
 │   │   └── log.py            # Tabelas access_logs e maintenance_logs
 │   ├── services/             # Regras de negócio e integrações
 │   │   ├── __init__.py
 │   │   ├── classifier.py     # Classificador de matérias por palavras-chave
-│   │   ├── news_service.py   # Integração NewsAPI e recriação de páginas
+│   │   ├── news_service.py   # Integração NewsAPI e criação de metadados
+│   │   ├── static_pages.py   # Persistência atômica dos snapshots HTML
 │   │   └── backup_service.py # Rotinas de backup atômico e restauração local
 │   ├── tasks/                # Tarefas agendadas e manutenção
 │   │   ├── __init__.py
-│   │   ├── cleanup.py        # Limpeza de páginas inativas há mais de 5 dias
+│   │   ├── cleanup.py        # Auditoria compatível sem exclusão de páginas
 │   │   └── scheduler.py      # Agendador periódico em segundo plano
 │   ├── routes/               # Rotas e controladores
 │   │   ├── __init__.py
 │   │   ├── news.py           # Rotas públicas (/ e /noticia/<slug>)
-│   │   ├── admin.py          # Painel administrativo e simulação (/admin)
+│   │   ├── admin.py          # Painel administrativo (/admin)
 │   │   └── api.py            # Endpoints JSON para monitoramento (/api/stats)
 │   ├── templates/            # Templates Jinja2
 │   │   ├── base.html         # Layout base e navegação
 │   │   ├── index.html        # Feed de notícias e filtros de categoria
-│   │   ├── article.html      # Página interna dinâmica e inspetor SQLite
-│   │   ├── admin.html        # Painel do banco e teste dos 5 dias
+│   │   ├── article.html      # Template usado na criação do snapshot estático
+│   │   ├── admin.html        # Painel de páginas permanentes
 │   │   └── backup.html       # Gerenciador de backups locais
 │   └── static/               # Arquivos estáticos
 │       ├── css/style.css
@@ -134,8 +132,8 @@ O sistema inclui ferramentas para salvaguardar a base SQLite sem qualquer depend
 │   └── init_db.py            # Script CLI de inicialização e migração
 ├── tests/                    # Testes automatizados (pytest)
 │   ├── test_models.py        # Validação dos modelos e integridade
-│   ├── test_cleanup.py       # Validação da regra dos 5 dias
-│   ├── test_recreation.py   # Validação da recriação dinâmica automática
+│   ├── test_cleanup.py       # Validação da retenção permanente
+│   ├── test_recreation.py   # Validação dos snapshots HTML
 │   └── test_backup.py        # Validação de backup e listagem
 ├── config.py                 # Classes de configuração (Dev, Test, Prod)
 ├── run.py                    # Ponto de entrada da aplicação
@@ -189,7 +187,7 @@ Acesse a aplicação no navegador em: **`http://localhost:5000`**
 
 ## 🧪 Execução dos Testes Automatizados
 
-O projeto possui cobertura completa de testes com `pytest`, validando os modelos SQLAlchemy, o mecanismo de expiração dos 5 dias, a recriação dinâmica e os backups:
+Os testes com `pytest` validam os modelos SQLAlchemy, a retenção dos snapshots HTML, as rotinas de manutenção e os backups:
 
 ```bash
 pytest tests/ -v
@@ -203,8 +201,9 @@ pytest tests/ -v
 |---|---|---|
 | `SECRET_KEY` | *(aleatória)* | Chave de segurança para sessões Flask e cookies |
 | `SQLITE_PATH` | `instance/database.sqlite3` | Caminho do arquivo SQLite local no servidor |
+| `STATIC_ARTICLES_DIR` | `noticia/` | Diretório de snapshots HTML; use um volume persistente em produção |
 | `DATABASE_URL` | `sqlite:///instance/database.sqlite3` | URI de conexão SQLAlchemy |
 | `NEWS_API_KEY` | *(chave fornecida)* | Chave da NewsAPI para coleta de notícias |
-| `CLEANUP_INTERVAL_MINUTES` | `60` | Frequência em minutos da rotina de limpeza |
+| `CLEANUP_INTERVAL_MINUTES` | `60` | Frequência em minutos da verificação compatível, sem apagar páginas |
 | `PORT` | `5000` | Porta onde o Flask responderá |
 | `FLASK_ENV` | `development` | Ambiente de execução (`development` ou `production`) |

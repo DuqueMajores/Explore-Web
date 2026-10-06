@@ -47,8 +47,8 @@ class AccessLog(db.Model):
 
 class MaintenanceLog(db.Model):
     """
-    Histórico das execuções da rotina de limpeza automática e manutenção do SQLite.
-    Permite auditar quando a verificação dos 5 dias foi realizada e quantas páginas foram excluídas.
+    Histórico das execuções de auditoria e manutenção do SQLite.
+    Registra páginas verificadas e mantém compatibilidade com contagens antigas de exclusão.
     """
     __tablename__ = 'maintenance_logs'
 

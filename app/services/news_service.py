@@ -464,19 +464,15 @@ class NewsService:
 
     def get_or_create_page_for_article(self, article: NewsArticle, reader_id: str, ip: str = '', user_agent: str = '') -> Tuple[ArticlePage, bool]:
         """
-        REGRA PRINCIPAL:
-        Quando um leitor clica no card da notícia:
-        1. O sistema verifica se já existe no SQLite uma página correspondente.
-        2. Se não existir ou se tiver sido previamente excluída (ex: pelos 5 dias sem acesso),
-           recria o registro da página automaticamente.
-        3. Registra o acesso do leitor anônimo e atualiza a data do último acesso em UTC.
-        Retorna (página, foi_recriada).
+        Cria ou atualiza os metadados da página e registra o acesso anônimo.
+        A rota Flask materializa o HTML no primeiro acesso; os registros não expiram.
+        Retorna (página, foi_criada).
         """
         was_recreated = False
         page = ArticlePage.query.filter_by(news_id=article.id).first()
 
         if page is None:
-            # Página ainda não existe ou foi excluída anteriormente pela rotina de limpeza
+            # Metadados ainda não existem para esta matéria.
             page = ArticlePage.create_for_article(article)
             db.session.add(page)
             was_recreated = True

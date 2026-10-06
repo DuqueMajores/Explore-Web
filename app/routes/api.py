@@ -172,8 +172,9 @@ def stats():
             'access_logs': AccessLog.query.count()
         },
         'policy': {
-            'expiration_days': current_app.config.get('PAGE_EXPIRATION_DAYS', 5),
-            'auto_cleanup_rule': 'Páginas sem acesso por 5 dias consecutivos são excluídas do SQLite e recriadas dinamicamente se acessadas novamente.'
+            'page_lifetime': 'permanent',
+            'static_articles_dir': current_app.config.get('STATIC_ARTICLES_DIR'),
+            'auto_cleanup_rule': 'O primeiro acesso grava um snapshot HTML permanente; a rotina de manutenção não remove páginas.'
         }
     })
 

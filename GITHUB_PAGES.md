@@ -45,3 +45,9 @@ No seu repositório no GitHub:
 - **`static/` e `docs/static/`**: Estilos Tailwind, tipografia editorial, FontAwesome e relógios mundiais.
 - **`.nojekyll`**: Desativa o processador Jekyll do GitHub, garantindo que o portal seja exibido com fidelidade.
 - **`404.html`**: Redirecionamento amigável para rotas dinâmicas.
+
+## Retenção das páginas de matérias
+
+No servidor Flask, o primeiro clique grava a página como HTML em `STATIC_ARTICLES_DIR/<slug>/index.html`; as rotinas de manutenção não a excluem por inatividade. Em produção, esse diretório precisa apontar para armazenamento persistente.
+
+O GitHub Pages não executa Flask e não consegue criar arquivos no momento do clique. Por isso, o exportador pré-renderiza os artigos durante o build e copia para `docs/noticia/` os snapshots já existentes em `noticia/`, preservando páginas antigas em publicações futuras.

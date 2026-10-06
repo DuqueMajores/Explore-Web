@@ -4,7 +4,7 @@ from app.extensions import db
 from app.models.news import NewsArticle
 from app.models.page import ArticlePage
 from app.models.log import AccessLog, MaintenanceLog
-from app.tasks.cleanup import clean_expired_pages, simulate_age_page
+from app.tasks.cleanup import clean_expired_pages
 from app.services.backup_service import BackupService
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
@@ -39,25 +39,14 @@ def dashboard():
         total_logs=total_logs,
         pages=pages,
         maintenance_history=maintenance_history,
-        expiration_days=current_app.config.get('PAGE_EXPIRATION_DAYS', 5)
+        static_articles_dir=current_app.config.get('STATIC_ARTICLES_DIR')
     )
 
 @admin_bp.route('/limpeza/executar', methods=['POST'])
 def trigger_cleanup():
-    """Executa manualmente a rotina de exclusão das páginas com >= 5 dias sem acesso."""
+    """Executa manualmente uma auditoria sem excluir páginas HTML permanentes."""
     checked, deleted, msg = clean_expired_pages(current_app, execution_type='manual')
     flash(msg, 'success' if deleted > 0 else 'info')
-    return redirect(url_for('admin.dashboard'))
-
-@admin_bp.route('/pagina/<int:page_id>/envelhecer', methods=['POST'])
-def age_page(page_id):
-    """
-    Simula 5+ dias sem acesso em uma página específica.
-    Facilita testar a exclusão e a posterior recriação dinâmica.
-    """
-    days = int(request.form.get('dias', 6))
-    success, msg = simulate_age_page(page_id, days_to_age=days)
-    flash(msg, 'warning' if success else 'error')
     return redirect(url_for('admin.dashboard'))
 
 @admin_bp.route('/backups')

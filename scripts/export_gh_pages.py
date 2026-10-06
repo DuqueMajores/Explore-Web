@@ -144,14 +144,22 @@ def export_static_site(output_dir='docs'):
         articles = unique_articles
         print(f"[*] Total de matérias únicas no SQLite: {len(articles)}")
 
-        # Limpa e recria diretório de saída docs/
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        preserved_pages_dir = os.path.join(root_dir, 'noticia')
+
+        # Recria o pacote de publicação, preservando os snapshots HTML já publicados.
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
         os.makedirs(output_dir, exist_ok=True)
         os.makedirs(os.path.join(output_dir, 'data'), exist_ok=True)
+        if os.path.isdir(preserved_pages_dir):
+            shutil.copytree(
+                preserved_pages_dir,
+                os.path.join(output_dir, 'noticia'),
+                dirs_exist_ok=True
+            )
 
         # 1. Copia static assets para docs/static
-        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         static_src = os.path.join(root_dir, 'app', 'static')
         static_dest = os.path.join(output_dir, 'static')
         if os.path.exists(static_src):
@@ -191,7 +199,7 @@ def export_static_site(output_dir='docs'):
                 f.write(rel_html)
             print("[✓] Raiz /index.html e /404.html sincronizados para compatibilidade de deploy no root.")
 
-        # 4. Prepara o catálogo e gera páginas estáticas para todas as matérias.
+        # 4. Prepara o catálogo e gera páginas estáticas sem apagar snapshots anteriores.
         articles_data = []
         rendered_count = 0
 
