@@ -119,6 +119,17 @@ def export_static_site(output_dir='docs'):
     
     app = create_app()
     with app.app_context():
+        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        archive_path = os.path.join(root_dir, 'data', 'articles.json')
+        try:
+            with open(archive_path, encoding='utf-8') as archive_file:
+                archived_articles = json.load(archive_file)
+            if not isinstance(archived_articles, list):
+                archived_articles = []
+        except (OSError, ValueError):
+            archived_articles = []
+        # Mantém as matérias publicadas em execuções anteriores mesmo quando o
+        # banco SQLite efêmero do GitHub Actions começa vazio.
         news_svc = NewsService(app.config.get('NEWS_API_KEY', ''), app.config.get('NEWS_API_BASE_URL', ''))
         # O GitHub Pages não executa Flask em tempo de acesso. Sincroniza antes
         # da exportação para que cada deploy agendado publique um catálogo novo.
@@ -128,22 +139,12 @@ def export_static_site(output_dir='docs'):
 
         articles = NewsArticle.query.order_by(NewsArticle.published_at.desc().nullslast(), NewsArticle.id.desc()).all()
 
-        # Evita exibir a mesma matéria ou a mesma foto várias vezes no catálogo exportado.
-        seen_titles, seen_images, unique_articles = set(), set(), []
-        for article in articles:
-            title_key = ' '.join((article.title or '').lower().split())
-            image_key = (article.image_url or '').strip().lower()
-            if title_key and title_key in seen_titles:
-                continue
-            if image_key and image_key in seen_images:
-                continue
-            seen_titles.add(title_key)
-            if image_key:
-                seen_images.add(image_key)
-            unique_articles.append(article)
-        articles = unique_articles
-        print(f"[*] Total de matérias únicas no SQLite: {len(articles)}")
+        # Não filtra matérias por título ou imagem: cada registro do banco deve
+        # continuar disponível no arquivo histórico e nas páginas estáticas.
+        print(f"[*] Total de matérias no SQLite: {len(articles)}")
 
+        # Mantém cada matéria distinta, sem descartar matérias por repetirem imagem.
+        # O arquivo versionado data/articles.json é o arquivo histórico durável.
         # Limpa e recria diretório de saída docs/
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
@@ -151,7 +152,6 @@ def export_static_site(output_dir='docs'):
         os.makedirs(os.path.join(output_dir, 'data'), exist_ok=True)
 
         # 1. Copia static assets para docs/static
-        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         static_src = os.path.join(root_dir, 'app', 'static')
         static_dest = os.path.join(output_dir, 'static')
         if os.path.exists(static_src):
@@ -235,6 +235,35 @@ def export_static_site(output_dir='docs'):
                 with open(os.path.join(id_dir, 'index.html'), 'w', encoding='utf-8') as f:
                     f.write(alias_html)
 
+        # Funde o histórico versionado com as notícias recém-publicadas.
+        known_urls = {str(item.get('open_url', '')) for item in articles_data}
+        known_titles = {' '.join(str(item.get('title', '')).lower().split()) for item in articles_data}
+        for archived in archived_articles:
+            url = str(archived.get('open_url', ''))
+            title_key = ' '.join(str(archived.get('title', '')).lower().split())
+            if url and url not in known_urls and title_key not in known_titles:
+                articles_data.append(archived)
+                known_urls.add(url)
+                known_titles.add(title_key)
+        # Reaproveita as páginas estáticas históricas cujos artigos não estão
+        # mais no banco transitório desta execução.
+        previous_pages = os.path.join(root_dir, 'noticia')
+        output_pages = os.path.join(output_dir, 'noticia')
+        if os.path.isdir(previous_pages):
+            for archived in archived_articles:
+                old_url = str(archived.get('open_url', ''))
+                if not old_url.startswith('noticia/'):
+                    continue
+                relative_page = old_url[len('noticia/'):].split('/', 1)[0]
+                source_dir = os.path.join(previous_pages, relative_page)
+                target_dir = os.path.join(output_pages, relative_page)
+                if os.path.isdir(source_dir) and not os.path.exists(target_dir):
+                    shutil.copytree(source_dir, target_dir)
+                old_id = archived.get('id')
+                old_alias = os.path.join(previous_pages, 'abrir', str(old_id))
+                new_alias = os.path.join(output_pages, 'abrir', str(old_id))
+                if old_id is not None and os.path.isdir(old_alias) and not os.path.exists(new_alias):
+                    shutil.copytree(old_alias, new_alias)
         # Salva docs/data/articles.json e copia para /data/articles.json
         data_json_path = os.path.join(output_dir, 'data', 'articles.json')
         with open(data_json_path, 'w', encoding='utf-8') as f:
